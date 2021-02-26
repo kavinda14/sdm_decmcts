@@ -47,7 +47,7 @@ def plotTree(list_of_all_nodes, winner, action_set, use_UCT, budget, fig_num, ex
     r_max = r_max_new
 
     # Plot all nodes in the tree
-    for i in xrange(len(list_of_all_nodes)):
+    for i in range(len(list_of_all_nodes)):
         n = list_of_all_nodes[i]
 
         # Get position of this node
@@ -104,7 +104,7 @@ def getPosition(seq, n):
     eps = 0
     maxn = 6
 
-    for i in xrange(len(seq)):
+    for i in range(len(seq)):
         pos = max(((-eps/maxn)*i+eps),1)*(pos + scramble(seq[i].id, n) * math.pow(n, -i))
 
     return -pos
