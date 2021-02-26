@@ -37,8 +37,8 @@ class Simulator:
         #Update the location of the robots
         for r in self.robots:
             # Generate an action from the robot path
-            action = r.follow_path()
-
+            action = r.follow_direction_path()
+            # action = r.follow_path()
             # Move the robot
             r.move(action)
 
