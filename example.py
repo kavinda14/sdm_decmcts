@@ -1,4 +1,5 @@
 from RandomPlanner import RandomPlanner
+from MCTS_Planner import
 from Map import Map
 from Robot import Robot
 from Simulator import Simulator
@@ -15,7 +16,7 @@ if __name__ == "__main__":
         planner = RandomPlanner(10000)
         random_path = planner.random_path(r)
         r.set_path(random_path)
-    
+    print(random_path)
     #Use the Simulator to evaluate the final paths
     simulator = Simulator(world, robots)
     simulator.run()
@@ -25,4 +26,3 @@ if __name__ == "__main__":
     print(simulator.get_score())
 
     print('test')
-    print('test test-pat')
