@@ -25,3 +25,4 @@ if __name__ == "__main__":
     print(simulator.get_score())
 
     print('test')
+    print('test test-pat')
