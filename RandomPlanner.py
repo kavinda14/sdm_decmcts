@@ -23,8 +23,6 @@ class RandomPlanner():
                 direction = 'forward'
 
             robot.move(direction)
-            print(randNumb)
-            print(direction)
             path.append(robot.get_loc())
         robot.reset_robot()
         return path

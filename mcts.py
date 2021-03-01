@@ -170,6 +170,41 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
         current = best_child
 
     solution = current.sequence
+    solution = listActionSequence(solution)
+    solution = direction_path_to_state_path_converter(solution, robot.start_loc)
+    print('hello?')
     winner = current
 
     return [solution, root, list_of_all_nodes, winner]
+
+def listActionSequence(action_sequence):
+    action_list = []
+    for action in action_sequence:
+        action_list.append(action.label)
+    print("MCTS Solution as Directions: ", action_list)
+    return action_list
+
+def direction_path_to_state_path_converter(solution,starting_coor):
+    direction_list = solution
+
+    state_list = []
+    coordinate = list(starting_coor)
+    state_list.append(coordinate[:])
+    for a in direction_list:
+        # print(a)
+        if a == 'left':
+            coordinate[0] = coordinate[0] - 1
+        if a == 'right':
+            coordinate[0] = coordinate[0] + 1
+            print(coordinate)
+        if a == 'forward':
+            coordinate[1] = coordinate[1] + 1
+        if a == 'backward':
+            coordinate[1] = coordinate[1] - 1
+        b = []
+        # print(coordinate)
+        b.append(coordinate[:])
+        state_list = state_list + b
+
+    print("MCTS Solution as States: ", state_list)
+    return state_list

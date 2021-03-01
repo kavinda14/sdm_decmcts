@@ -35,7 +35,7 @@ class Robot:
         #Just don't move
         if not direction:
             return True
-        print('direction: ', direction)
+
         if direction == 'left':
             valid = self.x_loc-1 >= self.lim[0]
             if valid and updateState:
@@ -85,8 +85,7 @@ class Robot:
 
         current_loc = self.path[self.index]
         next_loc = self.path[self.index+1]
-        print(next_loc[0])
-        print(current_loc[0])
+
         if next_loc[0] == current_loc[0]-1:
             direction = "left"
         if next_loc[0] == current_loc[0]+1:

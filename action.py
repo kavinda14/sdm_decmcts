@@ -26,8 +26,3 @@ def listActionSequence(action_sequence):
     for action in action_sequence:
         action_list.append(action.label)
     return action_list
-
-
-
-
-# add direction

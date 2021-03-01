@@ -19,6 +19,7 @@ if __name__ == "__main__":
 
         mcts_path = mcts_planner(r)  # run mcts algorithm | output = a path
         print("Path from MCTS", mcts_path)
+        print("Path Length: ", len(mcts_path))
         r.set_path(mcts_path)
 
     # #Use the Simulator to evaluate the final paths
