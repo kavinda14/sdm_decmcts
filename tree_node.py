@@ -5,7 +5,6 @@ Oregon State University
 Jan 2020
 '''
 
-
 class TreeNode():
     def __init__(self, parent, sequence, budget, unpicked_child_actions):
         # tree properties
@@ -25,8 +24,6 @@ class TreeNode():
         # Incremental update to the average
         self.average_evaluation_score = float(self.average_evaluation_score * self.num_updates + evaluation_score) / float(self.num_updates + 1)
         self.num_updates = self.num_updates + 1
-
-
 
 def countNodes(current):
     count = 1

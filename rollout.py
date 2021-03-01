@@ -12,7 +12,6 @@ import copy
 def rollout(subsequence, action_set, budget):
     # Random rollout policy
     # Pick random actions until budget is exhausted
-
     # To Add:Robot current location is needed for each action
     num_actions = len(action_set)
     if num_actions <= 0:

@@ -2,12 +2,9 @@
 
 import matplotlib
 import matplotlib.pyplot as plt
-
-
 import math
 
 from action import printActionSequence
-
 
 
 def plotTree(list_of_all_nodes, winner, action_set, use_UCT, budget, fig_num, exploration_exploitation_parameter):
@@ -92,11 +89,6 @@ def plotTree(list_of_all_nodes, winner, action_set, use_UCT, budget, fig_num, ex
     plt.axis('off') 
     plt.show(block=False)
     print("tree plot")
-
-
-                        
-
-
 
 def getPosition(seq, n):
 
