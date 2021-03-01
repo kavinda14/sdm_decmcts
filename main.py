@@ -11,7 +11,7 @@ from tree_node import countNodes
 from plot_tree import plotTree
 import time, sys
 
-def run(robot):
+def mcts_planner(robot):
     # Setup the problem
     num_actions = 4  # 0 = left, 1 = right, 2 = up, 3 = down
     action_set = []
