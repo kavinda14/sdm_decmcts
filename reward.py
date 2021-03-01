@@ -9,7 +9,6 @@ from action import Action #, printActionSequence
 
 def reward(action_sequence):
     # A simple reward function
-
     # Iterate through the sequence, looking at pairs
     reward = 0
     for i in range(len(action_sequence)-1): # Yes, we want -1 here

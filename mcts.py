@@ -47,7 +47,6 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
                 current.unpicked_child_actions.remove(a)
 
         while True:
-
             # Are there any children to be added here?
             if current.unpicked_child_actions: # if not empty
                 # Pick one of the children that haven't been added | Select a valid direction
@@ -76,9 +75,7 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
                 def is_overbudget_or_invalid(a): # pat
                     seq_copy = copy.deepcopy(current.sequence)
                     seq_copy.append(a)
-                    print('2')
                     result = robot.check_valid_move(a.label)
-                    print('1')
                     if cost(seq_copy) > budget:
                         return True # a will not be added to the new_unpicked_child_actions list
                     if result == False:
@@ -98,19 +95,15 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
                 list_of_all_nodes.append(new_child_node) # for debugging only
                 print('---')
                 break # don't go deeper in the tree...
-
             else:
-                
                 # All possible children already exist
                 # Therefore recurse down the tree
                 # using the UCT selection policy
 
                 if not current.children:
-
                     # Reached planning horizon -- just do this again
                     break
                 else:
-
                     # Define the UCB
                     def ucb(average, n_parent, n_child):
                         return average + exploration_exploitation_parameter * math.sqrt( (2*math.log(n_parent)) / float(n_child) )
@@ -127,8 +120,9 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
                             best_ucb_score = ucb_score
 
                     # Recurse down the tree
+                    robot.move(best_child.label) # pat
                     current = best_child
-            print('---')
+
 
         ################################
         # Rollout
@@ -142,7 +136,6 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
         print("Back-Propagation Phase")
         parent = current
         while parent: # is not None
-
             # Update the average
             parent.updateAverage(rollout_reward)
 
@@ -156,7 +149,6 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
     # by recursively choosing child with highest average reward
     current = root
     while current.children: # is not empty
-
         # Find the child with best score
         best_score = 0
         best_child = -1
@@ -166,13 +158,11 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
             if best_child == -1 or (score > best_score):
                 best_child = child
                 best_score = score
-
         current = best_child
 
     solution = current.sequence
     solution = listActionSequence(solution)
     solution = direction_path_to_state_path_converter(solution, robot.start_loc)
-    print('hello?')
     winner = current
 
     return [solution, root, list_of_all_nodes, winner]
