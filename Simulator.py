@@ -83,6 +83,10 @@ class Simulator:
         survivor_y = [i[1] for i in self.map.survivor_locs]
         plt.scatter(survivor_x, survivor_y, color='tab:red')
 
+        hotspot_x = [i[0] for i in self.map.hotspots]
+        hotspot_y = [i[1] for i in self.map.hotspots]
+        plt.scatter(hotspot_x, hotspot_y, color='black', marker="x")
+
         for r in self.robots:
             robot_x = [p[0] for p in r.path]
             robot_y = [p[1] for p in r.path]

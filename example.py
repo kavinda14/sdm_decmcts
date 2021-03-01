@@ -12,11 +12,11 @@ if __name__ == "__main__":
     world = Map(robots)
 
     #Generate a path the robots (Dec-MCTS goes here)
-    for r in robots:
-        planner = RandomPlanner(10000)
-        random_path = planner.random_path(r)
-        r.set_path(random_path)
-    print("random_path: ", random_path)
+    # for r in robots:
+    #     planner = RandomPlanner(1000)
+    #     random_path = planner.random_path(r)
+    #     r.set_path(random_path)
+    # print("random_path: ", random_path)
 
     #Use the Simulator to evaluate the final paths
     simulator = Simulator(world, robots)

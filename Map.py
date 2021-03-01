@@ -9,12 +9,24 @@ class Map:
         """
         #TODO: Change these values later?
         self.bounds = (0,100)
-        self.num_survivors = 10
+        self.num_survivors = 30
+        self.num_hotspots = 5
+        diff = self.bounds[1]*0.1
 
         #Randomly place people in the environment
-        rand_x = np.random.uniform(self.bounds[0], self.bounds[1], size=self.num_survivors)
-        rand_y = np.random.uniform(self.bounds[0], self.bounds[1], size=self.num_survivors)
-        self.survivor_locs = [(rand_x[i], rand_y[i]) for i in range(0, len(rand_x))]
+        rand_x = np.random.uniform(self.bounds[0]+diff, self.bounds[1]-diff, size=self.num_hotspots)
+        rand_y = np.random.uniform(self.bounds[0]+diff, self.bounds[1]-diff, size=self.num_hotspots)
+        self.hotspots = [(rand_x[i], rand_y[i]) for i in range(0, len(rand_x))]
+
+        self.survivor_locs = list()
+        for i in range(0, self.num_survivors):
+            hotspot_id = np.random.randint(0, self.num_hotspots)
+            hotspot_loc = self.hotspots[hotspot_id]
+
+            rand_diff_x = np.random.uniform(-5, 5)
+            rand_diff_y = np.random.uniform(-5, 5)
+            survivor_loc = (hotspot_loc[0]+rand_diff_x, hotspot_loc[1]+rand_diff_y)
+            self.survivor_locs.append(survivor_loc)
 
         #TODO: Add in logic for barriers
 
