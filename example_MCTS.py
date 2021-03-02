@@ -2,7 +2,7 @@ from RandomPlanner import RandomPlanner
 from Map import Map
 from Robot import Robot
 from Simulator import Simulator
-from main import mcts_planner
+from mcts_planner import mcts_planner
 
 
 if __name__ == "__main__":
@@ -16,6 +16,7 @@ if __name__ == "__main__":
     for r in robots:
         # planner = RandomPlanner(10000)
         # random_path = planner.random_path(r)
+
 
         mcts_path = mcts_planner(r)  # run mcts algorithm | output = a path
         print("Path from MCTS", mcts_path)
