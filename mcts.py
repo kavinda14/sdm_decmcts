@@ -38,7 +38,7 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
         print("Selection and Expansion")
         current = root
         #Reset the Robot's Stating Point
-        robot.reset_robot()
+        # robot.reset_robot()
         print("Robot Loc: ", robot.get_loc())
         # Remove invalid actions from root state - pat
         for a in current.unpicked_child_actions:
@@ -120,7 +120,7 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
                             best_ucb_score = ucb_score
 
                     # Recurse down the tree
-                    robot.move(best_child.label) # pat
+                    # robot.move(best_child.sequence[0].label) # pat
                     current = best_child
 
 

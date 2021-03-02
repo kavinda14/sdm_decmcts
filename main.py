@@ -1,43 +1,33 @@
-'''
-Basic MCTS implementation
-Graeme Best
-Oregon State University
-Jan 2020
-'''
-
-from mcts import mcts
-from action import Action, printActionSequence, listActionSequence
-from tree_node import countNodes
-from plot_tree import plotTree
-import time, sys
-
-def mcts_planner(robot):
-    # Setup the problem
-    num_actions = 4  # 0 = left, 1 = right, 2 = up, 3 = down
-    action_set = []
-    # for i in range(num_actions):
-    #     id = i
-    #     action_set.append(Action(id,i))
-    action_set.append(Action(1, 'left'))
-    action_set.append(Action(2, 'right'))
-    action_set.append(Action(3, 'forward'))
-    action_set.append(Action(4, 'backward'))
-
-    budget = 10000
-    # Solve it with MCTS
-    exploration_exploitation_parameter = .01 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
-    max_iterations = 10000
-    [solution, root, list_of_all_nodes, winner] = mcts( action_set, budget, max_iterations, exploration_exploitation_parameter, robot)
-
-    # Display the tree
-    print("MCTS Solution")
-    plotTree(list_of_all_nodes, winner, action_set, False, budget, 1, exploration_exploitation_parameter)
-    plotTree(list_of_all_nodes, winner, action_set, True, budget, 2, exploration_exploitation_parameter)
-    path = solution
-    return path
+from RandomPlanner import RandomPlanner
+from Map import Map
+from Robot import Robot
+from Simulator import Simulator
+from mcts_planner import mcts_planner
 
 
+if __name__ == "__main__":
+    #Create robots to interact with the environment
+    robot = Robot(2,2) #NOTE: I start it at 2,2 so you can see it in the visualization
+    robots = [robot]
+    #Generate random map
+    world = Map(robots)
+
+    #Generate a path the robots (Dec-MCTS goes here)
+    for r in robots:
+        # planner = RandomPlanner(10000)
+        # random_path = planner.random_path(r)
 
 
-    
-    
+        mcts_path = mcts_planner(r)  # run mcts algorithm | output = a path
+        print("Path from MCTS", mcts_path)
+        print("Path Length: ", len(mcts_path))
+        r.set_path(mcts_path)
+
+    # #Use the Simulator to evaluate the final paths
+    simulator = Simulator(world, robots)
+    simulator.run()
+
+    # #See the results
+    simulator.visualize()
+    print(simulator.get_score())
+    print("Done :)")
