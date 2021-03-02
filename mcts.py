@@ -20,11 +20,12 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
     # Setup
     start_sequence = []
     unpicked_child_actions = copy.deepcopy(action_set)
-    root = TreeNode(parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
+    root = TreeNode(node_id = 0, parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
 
+    list_of_top_10_nodes = []
     list_of_all_nodes = []
     list_of_all_nodes.append(root) # for debugging only
-
+    current_node = 0
     ################################
     # Main loop
     for iter in range(max_iterations):
@@ -89,7 +90,8 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
 
                 # Create the new node and add it to the tree
                 printActionSequence(new_sequence)
-                new_child_node = TreeNode(parent=current, sequence=new_sequence, budget=new_budget_left, unpicked_child_actions=new_unpicked_child_actions)
+                current_node += 1
+                new_child_node = TreeNode(node_id = current_node, parent=current, sequence=new_sequence, budget=new_budget_left, unpicked_child_actions=new_unpicked_child_actions)
                 current.children.append(new_child_node)
                 current = new_child_node
                 list_of_all_nodes.append(new_child_node) # for debugging only
@@ -147,24 +149,32 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
     # Extract solution
     # calculate best solution so far
     # by recursively choosing child with highest average reward
-    current = root
-    while current.children: # is not empty
-        # Find the child with best score
-        best_score = 0
-        best_child = -1
-        for child_idx in range(len(current.children)):
-            child = current.children[child_idx]
-            score = child.average_evaluation_score
-            if best_child == -1 or (score > best_score):
-                best_child = child
-                best_score = score
-        current = best_child
+    i = 0
+    while i != 10:
+        current = root
+        while current.children and all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes) : # is not empty
+            # Find the child with best score
+            best_score = 0
+            best_child = -1
+            for child_idx in range(len(current.children)):
+                child = current.children[child_idx]
+                if not child.node_id in list_of_top_10_nodes:# pat
+                    score = child.average_evaluation_score
+                    if best_child == -1 or (score > best_score):
+                        best_child = child
+                        best_score = score
+            current = best_child
+        print("current.node_id = ", current.node_id)
+        list_of_top_10_nodes.append(current)
+        i += 1
+        print('Top 10 List: ', list_of_top_10_nodes)
 
-    solution = current.sequence
+    best_node = list_of_top_10_nodes[0]
+    solution = best_node.sequence
     solution = listActionSequence(solution)
     solution = direction_path_to_state_path_converter(solution, robot.start_loc)
-    winner = current
-
+    winner = best_node
+    print('length of node list: ', len(list_of_all_nodes))
     return [solution, root, list_of_all_nodes, winner]
 
 def listActionSequence(action_sequence):
@@ -198,3 +208,15 @@ def direction_path_to_state_path_converter(solution,starting_coor):
 
     print("MCTS Solution as States: ", state_list)
     return state_list
+
+
+def all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes):
+    count = 1
+    for child_idx in range(len(current.children)):
+        child = current.children[child_idx]
+        if child.node_id in list_of_top_10_nodes:
+            count += 1
+    if count < len(current.children):
+        return True
+    else:
+        return False

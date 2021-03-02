@@ -23,10 +23,10 @@ def mcts_planner(robot):
     action_set.append(Action(3, 'forward'))
     action_set.append(Action(4, 'backward'))
 
-    budget = 10000
+    budget = 20
     # Solve it with MCTS
-    exploration_exploitation_parameter = .01 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
-    max_iterations = 10000
+    exploration_exploitation_parameter = .0001 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
+    max_iterations = 1000
     [solution, root, list_of_all_nodes, winner] = mcts( action_set, budget, max_iterations, exploration_exploitation_parameter, robot)
 
     # Display the tree

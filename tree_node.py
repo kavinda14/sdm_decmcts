@@ -6,8 +6,9 @@ Jan 2020
 '''
 
 class TreeNode():
-    def __init__(self, parent, sequence, budget, unpicked_child_actions):
+    def __init__(self, node_id, parent, sequence, budget, unpicked_child_actions):
         # tree properties
+        self.node_id = node_id
         self.parent = parent        
         self.children = []
         self.unpicked_child_actions = unpicked_child_actions
