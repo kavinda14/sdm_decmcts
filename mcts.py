@@ -21,7 +21,8 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
     start_sequence = []
     unpicked_child_actions = copy.deepcopy(action_set)
     root = TreeNode(node_id = 0, parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
-
+    list_of_top_10_nodes_sequences = []
+    list_of_top_10_nodes_ids = []
     list_of_top_10_nodes = []
     list_of_all_nodes = []
     list_of_all_nodes.append(root) # for debugging only
@@ -149,25 +150,40 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
     # Extract solution
     # calculate best solution so far
     # by recursively choosing child with highest average reward
+    print('Extracting Solutions')
     i = 0
     while i != 10:
         current = root
-        while current.children and all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes) : # is not empty
+        while current.children and all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes_ids) : # is not empty
             # Find the child with best score
             best_score = 0
             best_child = -1
             for child_idx in range(len(current.children)):
                 child = current.children[child_idx]
                 # Only consider child nodes who have not been placed in the list - pat
-                if not child.node_id in list_of_top_10_nodes:
+                if not child.node_id in list_of_top_10_nodes_ids:
                     score = child.average_evaluation_score
                     if best_child == -1 or (score > best_score):
                         best_child = child
                         best_score = score
             current = best_child
+
+        # Append each iteration's node with the best average evaluation score
+        list_of_top_10_nodes_ids.append(current.node_id)
         list_of_top_10_nodes.append(current)
+        # Append the the node's action sequence into a list
+        print('Node: ', current.node_id)
+        solution = current.sequence
+        solution = listActionSequence(solution)
+        solution = direction_path_to_state_path_converter(solution, robot.start_loc)
+
+        print('Solution: ', solution)
+        list_of_top_10_nodes_sequences.append(solution)
+
         i += 1
-        print('Top 10 List: ', list_of_top_10_nodes)
+    print('Top 10 Node List: ', list_of_top_10_nodes)
+    print('Top 10 Node Id List: ', list_of_top_10_nodes_ids)
+    print('Top 10 Sequences List: ', list_of_top_10_nodes_sequences)
 
     # Select the best node from the top 10 nodes list and provide it as the solution
     best_node = list_of_top_10_nodes[0] # there are still 9 other nodes to see the solutions of
@@ -197,7 +213,6 @@ def direction_path_to_state_path_converter(solution,starting_coor):
             coordinate[0] = coordinate[0] - 1
         if a == 'right':
             coordinate[0] = coordinate[0] + 1
-            print(coordinate)
         if a == 'forward':
             coordinate[1] = coordinate[1] + 1
         if a == 'backward':
