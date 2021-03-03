@@ -5,7 +5,6 @@ Oregon State University
 Jan 2020
 '''
 
-from State import State
 from tree_node import TreeNode
 from reward import reward
 from cost import cost
@@ -49,9 +48,11 @@ def generate_neighbors(current_state, bounds):
 
     return neighbors
 
-def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, world_map):
+def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot, input_map):
     ################################
     # Setup
+    robot = copy.deepcopy(input_robot)
+    world_map = copy.deepcopy(input_map)
     start_sequence = list()
     start_sequence = [State(0, "root", robot.start_loc)]
     unpicked_child_actions = generate_neighbors(start_sequence[0], world_map.bounds)
@@ -87,7 +88,7 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
 
                 # Move the robot
                 if not child_action in visited_nodes:
-                    # visited_nodes.add(child_action)
+                    visited_nodes.add(child_action.location)
 
                     # Remove the child form the unpicked list
                     del current.unpicked_child_actions[child_index]
@@ -104,12 +105,12 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
                     def node_is_valid(a):
                         seq_copy = copy.deepcopy(current.sequence)
                         seq_copy.append(a)
-                        end_loc = seq_copy[-1]
+                        end_loc = seq_copy[-1].location
 
-                        # in_visited_nodes = end_loc in visited_nodes
+                        in_visited_nodes = end_loc in visited_nodes
                         over_budget = (cost(seq_copy) > budget)
 
-                        return not over_budget
+                        return not in_visited_nodes and not over_budget
 
                     #removes any new children if from the child if they go over budget or are invalid action
                     new_unpicked_child_actions = [a for a in new_unpicked_child_actions if node_is_valid(a)]

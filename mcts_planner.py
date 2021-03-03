@@ -18,7 +18,7 @@ def mcts_planner(robot, map):
     # Display the tree
     print("MCTS Solution")
     # plotTree(list_of_all_nodes, winner, False, budget, 1, exploration_exploitation_parameter)
-    plotTree(list_of_all_nodes, winner, True, budget, 2, exploration_exploitation_parameter)
+    # plotTree(list_of_all_nodes, winner, True, budget, 2, exploration_exploitation_parameter)
     return path
 
 

@@ -46,7 +46,7 @@ class Simulator:
         self._update_map()
 
         # Update the score
-        self.score = len(self.visited_survivors)
+        self.score = len(self.visited_survivors)*25
 
         #End when all survivors have been reached OR 1,000 iterations
         if len(self.visited_survivors) == self.map.num_survivors or self.iterations == 1000:
@@ -75,8 +75,8 @@ class Simulator:
         self.visited_survivors = self.visited_survivors.union(visited_states)
 
     def visualize(self):
-        plt.xlim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[0]*.05))
-        plt.ylim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[0]*.05))
+        plt.xlim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
+        plt.ylim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
         ax = plt.gca()
 
         survivor_x = [i[0] for i in self.map.survivor_locs]
