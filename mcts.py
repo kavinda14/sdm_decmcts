@@ -5,7 +5,7 @@ Oregon State University
 Jan 2020
 '''
 
-# from tree_node import TreeNode
+from tree_node import TreeNode
 from reward import reward
 from cost import cost
 from rollout import rollout

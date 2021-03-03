@@ -12,6 +12,8 @@ from plot_tree import plotTree
 import time, sys
 
 def mcts_planner(robot, map):
+
+
     # Setup the problem
     num_actions = 4  # 0 = left, 1 = right, 2 = up, 3 = down
     action_set = []
@@ -26,7 +28,7 @@ def mcts_planner(robot, map):
     budget = 10000
     # Solve it with MCTS
     exploration_exploitation_parameter = .01 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
-    max_iterations = 100
+    max_iterations = 10
     [solution, root, list_of_all_nodes, winner] = mcts( action_set, budget, max_iterations, exploration_exploitation_parameter, robot, map)
 
     # Display the tree

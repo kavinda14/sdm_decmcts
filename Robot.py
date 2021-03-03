@@ -68,8 +68,23 @@ class Robot:
     def set_path(self, path):
         self.path = path
 
+    def follow_direction_path(self):
+        """ Select direction that move robot along a pre-computed path"""
+        direction = None
+        if self.index+1 >= len(self.path):
+            return direction
+        direction = self.path[self.index]
+        self.index += 1
+        return direction
+
     def follow_path(self):
         """ Select direction that move robot along a pre-computed path"""
+
+        #Removes empty paths.
+        for p in self.path:
+            if p == ():
+                self.path.remove(p)
+
         direction = None
         if self.index+1 >= len(self.path):
             return direction

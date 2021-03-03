@@ -9,32 +9,49 @@ from action import Action #, printActionSequence
 from Map import Map
 import random
 import math
+from Simulator import Simulator
 import sys
 
 def reward(action_sequence, robot, map):
-    hotspots = map.hotspots
-    #It picks up an empty tuple at the start, so I just delete it.
-    reward = 0
+    robot_before = robot
 
-    for action in action_sequence:
-        if action.coords == ():
-            continue
-        rand_index = random.randint(0, len(action_sequence))
-        closest_hotspot_distance = math.inf
-        for hotspot in hotspots:
-            dist = euclidean_distance(action.coords, hotspot)
-            closest_hotspot_distance = min(closest_hotspot_distance, dist)
-        #Notice that we are calculating a negative reward here.
-        #Logic: closer euclidean distance to a hotspot means higher reward.
-        reward += -closest_hotspot_distance
-        # print(reward)
-    # sys.exit()
+    # path_before = robot.path
+    robot.set_path(action_sequence)
+    simulator = Simulator(map, [robot])
+    simulator.run()
+    score = simulator.get_score()
+    # robot.set_path(path_before)
+    print("score: ", score)
 
-    # print(reward)
-    # print(normalize_reward(action_sequence, reward))
-    # sys.exit()
+    robot = robot_before
 
-    return normalize_reward(action_sequence, reward)
+    return score
+    
+
+# def reward(action_sequence, robot, map):
+#     hotspots = map.hotspots
+#     #It picks up an empty tuple at the start, so I just delete it.
+#     reward = 0
+
+#     for action in action_sequence:
+#         if action.coords == ():
+#             continue
+#         rand_index = random.randint(0, len(action_sequence))
+#         closest_hotspot_distance = math.inf
+#         for hotspot in hotspots:
+#             dist = euclidean_distance(action.coords, hotspot)
+#             closest_hotspot_distance = min(closest_hotspot_distance, dist)
+#         #Notice that we are calculating a negative reward here.
+#         #Logic: closer euclidean distance to a hotspot means higher reward.
+#         reward += -closest_hotspot_distance
+#         # print(reward)
+#     # sys.exit()
+
+#     # print(reward)
+#     # print(normalize_reward(action_sequence, reward))
+#     # sys.exit()
+
+#     return normalize_reward(action_sequence, reward)
 
 
 def euclidean_distance(p1, p2):
@@ -56,7 +73,8 @@ def normalize_reward(action_sequence, reward):
     return reward_normalised
 
 
-# def reward2(action_sequence):
+
+# def reward_graeme(action_sequence):
 #     # A simple reward function
 #     # Iterate through the sequence, looking at pairs
 #     reward = 0
