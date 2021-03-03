@@ -27,24 +27,29 @@ class State():
         return int(self.label)
 
 
-def generate_neighbors(current_state, bounds):
+def generate_neighbors(current_state, state_sequence, bounds):
     neighbors = list()
     current_loc = current_state.location
+    sequence = [s.location for s in state_sequence]
     if current_loc[0]-1 >= bounds[0]: #left
         new_loc = (current_loc[0]-1, current_loc[1])
-        neighbors.append(State(1, "left", new_loc))
+        if not new_loc in sequence:
+            neighbors.append(State(1, "left", new_loc))
 
     if current_loc[0]+1 <= bounds[1]: #right
         new_loc = (current_loc[0]+1, current_loc[1])
-        neighbors.append(State(2, "right", new_loc))
+        if not new_loc in sequence:
+            neighbors.append(State(2, "right", new_loc))
 
     if current_loc[1]+1 <= bounds[1]: #forwards
         new_loc = (current_loc[0], current_loc[1]+1)
-        neighbors.append(State(3, "forward", new_loc))
+        if not new_loc in sequence:
+            neighbors.append(State(3, "forward", new_loc))
 
     if current_loc[1]-1 >= bounds[0]: #backwards
         new_loc = (current_loc[0], current_loc[1]-1)
-        neighbors.append(State(4, "backwards", new_loc))
+        if not new_loc in sequence:
+            neighbors.append(State(4, "backwards", new_loc))
 
     return neighbors
 
@@ -55,7 +60,7 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot
     world_map = copy.deepcopy(input_map)
     start_sequence = list()
     start_sequence = [State(0, "root", robot.start_loc)]
-    unpicked_child_actions = generate_neighbors(start_sequence[0], world_map.bounds)
+    unpicked_child_actions = generate_neighbors(start_sequence[0], start_sequence, world_map.bounds)
     root = TreeNode(parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
 
     list_of_all_nodes = list()
@@ -87,42 +92,35 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot
                 child_action = current.unpicked_child_actions[child_index]
 
                 # Move the robot
-                if not child_action in visited_nodes:
-                    visited_nodes.add(child_action.location)
+                # Remove the child form the unpicked list
+                del current.unpicked_child_actions[child_index]
 
-                    # Remove the child form the unpicked list
-                    del current.unpicked_child_actions[child_index]
+                # Setup the new action sequence
+                new_sequence = copy.deepcopy(current.sequence)
+                new_sequence.append(child_action)
+                new_budget_left = budget - cost(new_sequence)
 
-                    # Setup the new action sequence
-                    new_sequence = copy.deepcopy(current.sequence)
-                    new_sequence.append(child_action)
-                    new_budget_left = budget - cost(new_sequence)
+                # Setup the new child's unpicked children
+                # Remove any over budget or invalid children from this set
+                new_unpicked_child_actions = generate_neighbors(child_action, new_sequence, world_map.bounds)
 
-                    # Setup the new child's unpicked children
-                    # Remove any over budget or invalid children from this set
-                    new_unpicked_child_actions = generate_neighbors(child_action, world_map.bounds)
+                def node_is_valid(a):
+                    seq_copy = copy.deepcopy(current.sequence)
+                    seq_copy.append(a)
+                    end_loc = seq_copy[-1].location
+                    over_budget = (cost(seq_copy) > budget)
 
-                    def node_is_valid(a):
-                        seq_copy = copy.deepcopy(current.sequence)
-                        seq_copy.append(a)
-                        end_loc = seq_copy[-1].location
+                    return not over_budget
 
-                        in_visited_nodes = end_loc in visited_nodes
-                        over_budget = (cost(seq_copy) > budget)
+                #removes any new children if from the child if they go over budget or are invalid action
+                new_unpicked_child_actions = [a for a in new_unpicked_child_actions if node_is_valid(a)]
 
-                        return not in_visited_nodes and not over_budget
-
-                    #removes any new children if from the child if they go over budget or are invalid action
-                    new_unpicked_child_actions = [a for a in new_unpicked_child_actions if node_is_valid(a)]
-
-                    ##EXPANSION
-                    new_child_node = TreeNode(parent=current, sequence=new_sequence, budget=new_budget_left, unpicked_child_actions=new_unpicked_child_actions)
-                    current.children.append(new_child_node)
-                    current = new_child_node
-                    list_of_all_nodes.append(new_child_node) # for debugging only
-                    break # don't go deeper in the tree...
-                else:
-                    del current.unpicked_child_actions[child_index]
+                ##EXPANSION
+                new_child_node = TreeNode(parent=current, sequence=new_sequence, budget=new_budget_left, unpicked_child_actions=new_unpicked_child_actions)
+                current.children.append(new_child_node)
+                current = new_child_node
+                list_of_all_nodes.append(new_child_node) # for debugging only
+                break # don't go deeper in the tree...
             else:
                 # All possible children already exist
                 # Therefore recurse down the tree

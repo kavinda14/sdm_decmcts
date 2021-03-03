@@ -9,8 +9,8 @@ class Map:
         """
         #TODO: Change these values later?
         self.bounds = (0,10)
-        self.num_survivors = 5
-        self.num_hotspots = 2
+        self.num_survivors = 50
+        self.num_hotspots = 10
         diff = self.bounds[1]*0.1
 
         #Randomly place people in the environment
