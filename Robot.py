@@ -25,6 +25,10 @@ class Robot:
     def get_loc(self):
         return (self.x_loc, self.y_loc)
 
+    def set_loc(self, x_loc, y_loc):
+        self.x_loc = x_loc
+        self.y_loc = y_loc
+
     def check_valid_move(self, direction, updateState=False):
         """ Checks if the direction is valid
 

@@ -23,8 +23,8 @@ class Map:
             hotspot_id = np.random.randint(0, self.num_hotspots)
             hotspot_loc = self.hotspots[hotspot_id]
 
-            rand_diff_x = np.random.uniform(-2, 2)
-            rand_diff_y = np.random.uniform(-2, 2)
+            rand_diff_x = np.random.uniform(-0.5, 0.5)
+            rand_diff_y = np.random.uniform(-0.5, 0.5)
             survivor_loc = (hotspot_loc[0]+rand_diff_x, hotspot_loc[1]+rand_diff_y)
             self.survivor_locs.append(survivor_loc)
 

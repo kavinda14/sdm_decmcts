@@ -8,7 +8,7 @@ Jan 2020
 from tree_node import TreeNode
 from reward import reward
 from cost import cost
-from rollout import rollout
+from rollout import heuristic_rollout, uniform_rollout
 import copy
 import random
 import math
@@ -140,7 +140,8 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
         ################################
         # Rollout
         # print("Rollout Phase")
-        rollout_sequence = rollout(path=current.sequence, robot=robot, budget=budget)
+        rollout_sequence = uniform_rollout(path=current.sequence, robot=robot, budget=budget)
+        # rollout_sequence = heuristic_rollout(path=current.sequence, robot=robot, budget=budget, map=world_map)
         rollout_reward = reward(action_sequence=rollout_sequence, robot=robot, map=world_map)
 
         ################################

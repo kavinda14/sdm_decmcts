@@ -8,20 +8,10 @@ Jan 2020
 from mcts import mcts
 
 def mcts_planner(robot, map):
-    # Setup the problem
-    action_set = []
-    # for i in range(num_actions):
-    #     id = i
-    #     action_set.append(Action(id,i))
-    # action_set.append(Action(1, 'left'))
-    # action_set.append(Action(2, 'right'))
-    # action_set.append(Action(3, 'forward'))
-    # action_set.append(Action(4, 'backward'))
-
-    budget = 250
     # Solve it with MCTS
-    exploration_exploitation_parameter = .1 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
-    max_iterations = 1000
+    budget = 250
+    max_iterations = 2000
+    exploration_exploitation_parameter = .01 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
     path = mcts(budget, max_iterations, exploration_exploitation_parameter, robot, map)
 
     # Display the tree
