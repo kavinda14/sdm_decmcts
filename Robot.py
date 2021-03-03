@@ -9,7 +9,7 @@ class Robot:
         #Static variables
         self.start_loc = x_loc, y_loc
         self.velocity = 1.0
-        self.sensing_range = 0.05
+        self.sensing_range = 1.0
         self.lim = (0,10)
 
     def reset_robot(self):
@@ -87,8 +87,8 @@ class Robot:
         if self.index+1 >= len(self.path):
             return direction
 
-        current_loc = self.path[self.index]
-        next_loc = self.path[self.index+1]
+        current_loc = self.path[self.index].location
+        next_loc = self.path[self.index+1].location
         if next_loc[0] == current_loc[0]-1:
             direction = "left"
         if next_loc[0] == current_loc[0]+1:

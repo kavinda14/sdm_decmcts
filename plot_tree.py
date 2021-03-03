@@ -83,7 +83,7 @@ def plotTree(list_of_all_nodes, winner, use_UCT, budget, fig_num, exploration_ex
                 winner_handle = ax.plot(x, y, 'or', zorder=2, linewidth=5, markersize=12)
 
     plt.axis('off') 
-    plt.show(block=False)
+    plt.show()
     print("tree plot")
 
 def getPosition(seq, n):

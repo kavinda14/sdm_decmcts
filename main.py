@@ -17,7 +17,7 @@ if __name__ == "__main__":
         # planner = RandomPlanner(10000)
         # random_path = planner.random_path(r)
         mcts_path = mcts_planner(r, world)  # run mcts algorithm | output = a path
-        print("Path from MCTS", mcts_path)
+        print("Path from MCTS", [p.location for p in mcts_path])
         print("Path Length: ", len(mcts_path))
         r.set_path(mcts_path)
 

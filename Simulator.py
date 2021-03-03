@@ -25,10 +25,10 @@ class Simulator:
         for x in range(0, duration):
             end = self.tick()
             if end:
-                if self.found_goal:
-                    print("Found goal at time step: {}!".format(self.get_iteration()))
-                else:
-                    print("Simulation timed out")
+                # if self.found_goal:
+                #     print("Found goal at time step: {}!".format(self.get_iteration()))
+                # else:
+                #     print("Simulation timed out")
                 break
 
     def tick(self):
@@ -48,8 +48,8 @@ class Simulator:
         # Update the score
         self.score = len(self.visited_survivors)
 
-        #End when all survivors have been reached OR 10,000 iterations
-        if len(self.visited_survivors) == self.map.num_survivors or self.iterations == 10000:
+        #End when all survivors have been reached OR 1,000 iterations
+        if len(self.visited_survivors) == self.map.num_survivors or self.iterations == 1000:
             self.found_goal = len(self.visited_survivors) == self.map.num_survivors
             return True
         else:
@@ -88,9 +88,8 @@ class Simulator:
         plt.scatter(hotspot_x, hotspot_y, color='black', marker="x")
 
         for r in self.robots:
-            robot_x = [p[0] for p in r.path]
-            robot_y = [p[1] for p in r.path]
-            print("Path: {}".format(r.path))
+            robot_x = [p.location[0] for p in r.path]
+            robot_y = [p.location[1] for p in r.path]
             plt.plot(robot_x, robot_y)
 
         plt.show()

@@ -5,6 +5,7 @@ Oregon State University
 Jan 2020
 '''
 
+from State import State
 from tree_node import TreeNode
 from reward import reward
 from cost import cost
@@ -14,23 +15,37 @@ import random
 import math
 import sys
 
-def generate_neighbors(current_loc, bounds):
+class State():
+    '''Container for states in the graph'''
+    def __init__(self, id, label, location):
+        self.id = id
+        self.label = label
+        self.location = location
+
+    def toString(self):
+        return str(self.label)
+    def toInt(self):
+        return int(self.label)
+
+
+def generate_neighbors(current_state, bounds):
     neighbors = list()
+    current_loc = current_state.location
     if current_loc[0]-1 >= bounds[0]: #left
         new_loc = (current_loc[0]-1, current_loc[1])
-        neighbors.append(new_loc)
+        neighbors.append(State(1, "left", new_loc))
 
     if current_loc[0]+1 <= bounds[1]: #right
         new_loc = (current_loc[0]+1, current_loc[1])
-        neighbors.append(new_loc)
+        neighbors.append(State(2, "right", new_loc))
 
     if current_loc[1]+1 <= bounds[1]: #forwards
         new_loc = (current_loc[0], current_loc[1]+1)
-        neighbors.append(new_loc)
+        neighbors.append(State(3, "forward", new_loc))
 
     if current_loc[1]-1 >= bounds[0]: #backwards
         new_loc = (current_loc[0], current_loc[1]-1)
-        neighbors.append(new_loc)
+        neighbors.append(State(4, "backwards", new_loc))
 
     return neighbors
 
@@ -38,9 +53,8 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
     ################################
     # Setup
     start_sequence = list()
-    unpicked_child_actions = generate_neighbors(robot.start_loc, world_map.bounds)
-    start_sequence = list()
-    start_sequence.append(robot.start_loc)
+    start_sequence = [State(0, "root", robot.start_loc)]
+    unpicked_child_actions = generate_neighbors(start_sequence[0], world_map.bounds)
     root = TreeNode(parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
 
     list_of_all_nodes = list()
@@ -52,9 +66,9 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
 
     ################################
     # Main loop
-    for iter in range(max_iterations):
-        print("Current Iteration:", iter)
-        # print("Robot Loc: ", robot.get_loc())
+    for i in range(max_iterations):
+        if i%100 == 0:
+            print("Percent Complete: {:.2f}%".format(i/float(max_iterations)*100))
 
         # Selection and Expansion
         # move recursively down the tree from root
@@ -73,7 +87,7 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
 
                 # Move the robot
                 if not child_action in visited_nodes:
-                    visited_nodes.add(child_action)
+                    # visited_nodes.add(child_action)
 
                     # Remove the child form the unpicked list
                     del current.unpicked_child_actions[child_index]
@@ -92,10 +106,10 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
                         seq_copy.append(a)
                         end_loc = seq_copy[-1]
 
-                        in_visited_nodes = False#end_loc in visited_nodes
+                        # in_visited_nodes = end_loc in visited_nodes
                         over_budget = (cost(seq_copy) > budget)
 
-                        return (not in_visited_nodes and not over_budget)
+                        return not over_budget
 
                     #removes any new children if from the child if they go over budget or are invalid action
                     new_unpicked_child_actions = [a for a in new_unpicked_child_actions if node_is_valid(a)]

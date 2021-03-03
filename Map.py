@@ -36,7 +36,7 @@ class Map:
             r_loc = r.get_loc()
             for s_loc in self.survivor_locs:
                 distance = self.euclidean_distance(r_loc, s_loc)
-                if distance < r.sensing_range:
+                if distance <= r.sensing_range:
                     visited_states.add(s_loc)
         return visited_states
 
