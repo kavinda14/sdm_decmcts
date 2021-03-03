@@ -8,40 +8,32 @@ Jan 2020
 from cost import cost
 import random
 import copy
-import sys
-from Simulator import Simulator
 
-def rollout(subsequence, action_set, robot, map, budget):
+def rollout(path, robot, budget):
+    #Possible Actions
+    action_set = list()
+    action_set.append('left')
+    action_set.append('right')
+    action_set.append('forward')
+    action_set.append('backward')
+
     # Random rollout policy
     # Pick random actions until budget is exhausted
-    # To Add:Robot current location is needed for each action
+    new_path = copy.deepcopy(path)
+    robot.set_path(path)
 
-    location_before_rollout = robot.get_loc()
-    path = [action.coords for action in subsequence]
-    # print("Location before rollout: ", location_before_rollout)
+    #Move Robot along the path
+    action = "start"
+    while action:
+        action = robot.follow_path()
+        # Move the robot
+        robot.move(action)
 
-    num_actions = len(action_set)
-    if num_actions <= 0:
-        raise ValueError('rollout: num_actions is ' + str(num_actions))
-    # sequence = copy.deepcopy(subsequence)
-
-    while cost(path) < budget:
-        r = random.randint(0,num_actions-1)
+    while cost(new_path) < budget:
+        r = random.randint(0, len(action_set)-1)
         action = action_set[r]
-        action_direction = action.label
-        path.append(action.coords)
-        robot.move(action_direction)
-        action.coords = robot.get_loc()
-        # sequence.append(action)
-        path.append(action.coords)
 
-    robot.start_loc = location_before_rollout
-    # print("Check if location is same as before: ", robot.start_loc)
-    robot.reset_robot()
-
-    for p in path:
-        if p == ():
-            path.remove(p)
-
+        robot.move(action)
+        new_path.append(robot.get_loc())
 
     return path

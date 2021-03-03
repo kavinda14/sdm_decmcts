@@ -7,7 +7,7 @@ from mcts_planner import mcts_planner
 
 if __name__ == "__main__":
     #Create robots to interact with the environment
-    robot = Robot(2,2) #NOTE: I start it at 2,2 so you can see it in the visualization
+    robot = Robot(0,0) #NOTE: I start it at 2,2 so you can see it in the visualization
     robots = [robot]
     #Generate random map
     world = Map(robots)
@@ -16,10 +16,7 @@ if __name__ == "__main__":
     for r in robots:
         # planner = RandomPlanner(10000)
         # random_path = planner.random_path(r)
-
-
         mcts_path = mcts_planner(r, world)  # run mcts algorithm | output = a path
-
         print("Path from MCTS", mcts_path)
         print("Path Length: ", len(mcts_path))
         r.set_path(mcts_path)

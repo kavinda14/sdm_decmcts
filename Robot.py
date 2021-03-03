@@ -9,8 +9,8 @@ class Robot:
         #Static variables
         self.start_loc = x_loc, y_loc
         self.velocity = 1.0
-        self.sensing_range = 2.0
-        self.lim = (0,100)
+        self.sensing_range = 0.05
+        self.lim = (0,10)
 
     def reset_robot(self):
         self.x_loc = self.start_loc[0]
@@ -79,12 +79,6 @@ class Robot:
 
     def follow_path(self):
         """ Select direction that move robot along a pre-computed path"""
-
-        #Removes empty paths.
-        for p in self.path:
-            if p == ():
-                self.path.remove(p)
-
         direction = None
         if self.index+1 >= len(self.path):
             return direction

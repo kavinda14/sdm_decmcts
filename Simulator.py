@@ -75,8 +75,8 @@ class Simulator:
         self.visited_survivors = self.visited_survivors.union(visited_states)
 
     def visualize(self):
-        plt.xlim(self.map.bounds[0]-(self.map.bounds[0]*.05), self.map.bounds[1]+(self.map.bounds[0]*.05))
-        plt.ylim(self.map.bounds[0]-(self.map.bounds[0]*.05), self.map.bounds[1]+(self.map.bounds[0]*.05))
+        plt.xlim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[0]*.05))
+        plt.ylim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[0]*.05))
         ax = plt.gca()
 
         survivor_x = [i[0] for i in self.map.survivor_locs]
@@ -90,6 +90,7 @@ class Simulator:
         for r in self.robots:
             robot_x = [p[0] for p in r.path]
             robot_y = [p[1] for p in r.path]
-            plt.scatter(robot_x, robot_y)
+            print("Path: {}".format(r.path))
+            plt.plot(robot_x, robot_y)
 
         plt.show()

@@ -5,28 +5,34 @@ Oregon State University
 Jan 2020
 '''
 
-from action import Action #, printActionSequence
-from Map import Map
-import random
 import math
 from Simulator import Simulator
-import sys
 
 def reward(action_sequence, robot, map):
-    robot_before = robot
-
     # path_before = robot.path
     robot.set_path(action_sequence)
     simulator = Simulator(map, [robot])
     simulator.run()
     score = simulator.get_score()
-    # robot.set_path(path_before)
-    print("score: ", score)
-
-    robot = robot_before
-
     return score
     
+def euclidean_distance(p1, p2):
+    x1 = p1[0]
+    y1 = p1[1]
+    x2 = p2[0]
+    y2 = p2[1]
+
+    return math.sqrt((y2-y1)**2 + (x2-x1)**2)
+
+def normalize_reward(action_sequence, reward):
+    # Normalise between 0 and 1
+    max_reward = len(action_sequence) #-1
+    if max_reward == 0:
+        reward_normalised = 0
+    else:
+        reward_normalised = float(reward) / float(max_reward)
+    return reward_normalised
+
 
 # def reward(action_sequence, robot, map):
 #     hotspots = map.hotspots
@@ -52,27 +58,6 @@ def reward(action_sequence, robot, map):
 #     # sys.exit()
 
 #     return normalize_reward(action_sequence, reward)
-
-
-def euclidean_distance(p1, p2):
-    x1 = p1[0]
-    y1 = p1[1]
-    x2 = p2[0]
-    y2 = p2[1]
-
-    return math.sqrt((y2-y1)**2 + (x2-x1)**2)
-    
-
-def normalize_reward(action_sequence, reward):
-    # Normalise between 0 and 1
-    max_reward = len(action_sequence) #-1
-    if max_reward == 0:
-        reward_normalised = 0
-    else:
-        reward_normalised = float(reward) / float(max_reward)
-    return reward_normalised
-
-
 
 # def reward_graeme(action_sequence):
 #     # A simple reward function

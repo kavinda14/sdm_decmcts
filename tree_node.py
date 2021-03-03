@@ -8,12 +8,13 @@ Jan 2020
 class TreeNode():
     def __init__(self, parent, sequence, budget, unpicked_child_actions):
         # tree properties
-        self.parent = parent        
+        self.parent = parent    
         self.children = []
         self.unpicked_child_actions = unpicked_child_actions
 
         # sequence properties
         self.sequence = sequence
+        self.coord = sequence[-1]
         self.budget = budget
 
         # reward estimate properties
