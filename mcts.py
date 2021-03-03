@@ -92,7 +92,7 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
                         seq_copy.append(a)
                         end_loc = seq_copy[-1]
 
-                        in_visited_nodes = end_loc in visited_nodes
+                        in_visited_nodes = False#end_loc in visited_nodes
                         over_budget = (cost(seq_copy) > budget)
 
                         return (not in_visited_nodes and not over_budget)
@@ -175,4 +175,4 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, robot, worl
     solution = current.sequence
     winner = current
 
-    return solution
+    return [solution, list_of_all_nodes, winner]

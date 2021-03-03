@@ -1,13 +1,10 @@
 
 
-import matplotlib
 import matplotlib.pyplot as plt
 import math
 
-from action import printActionSequence
 
-
-def plotTree(list_of_all_nodes, winner, action_set, use_UCT, budget, fig_num, exploration_exploitation_parameter):
+def plotTree(list_of_all_nodes, winner, use_UCT, budget, fig_num, exploration_exploitation_parameter):
 
     def ucb(average, n_parent, n_child):
         return average + exploration_exploitation_parameter * math.sqrt( (2*math.log(n_parent)) / float(n_child) )
@@ -17,7 +14,7 @@ def plotTree(list_of_all_nodes, winner, action_set, use_UCT, budget, fig_num, ex
     ax = fig.add_axes([0,0,1,1])
     ax.set_axis_off()
 
-    num_actions = len(action_set)
+    num_actions = 4
 
     # Compute colour bounds
     r_min = 1.0
@@ -53,7 +50,6 @@ def plotTree(list_of_all_nodes, winner, action_set, use_UCT, budget, fig_num, ex
 
         # Plot edge to parent
         if n.parent:
-
             if use_UCT:
                 r = ucb(n.average_evaluation_score, n.parent.num_updates, n.num_updates)
             else:
@@ -91,7 +87,6 @@ def plotTree(list_of_all_nodes, winner, action_set, use_UCT, budget, fig_num, ex
     print("tree plot")
 
 def getPosition(seq, n):
-
     # Compute horizontal position based on sequence
     pos = -scramble(0, n)
     eps = 0
