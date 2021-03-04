@@ -46,7 +46,7 @@ class Simulator:
         self._update_map()
 
         # Update the score
-        self.score = len(self.visited_survivors)*25
+        self.score = len(self.visited_survivors)*10
 
         #End when all survivors have been reached OR 1,000 iterations
         if len(self.visited_survivors) == self.map.num_survivors or self.iterations == 1000:
