@@ -54,7 +54,6 @@ def heuristic_rollout(path, robot, budget, map):
 
     while cost(new_path) < budget:
         curr_loc = robot.get_loc()
-        r = random.randint(0, len(action_set)-1)
 
         #Get closest hotspot
         closest_hotspot = None
@@ -69,10 +68,10 @@ def heuristic_rollout(path, robot, budget, map):
         best_action = None
         min_dist = sys.maxsize
         for a in action_set:
-            robot.move(action)
+            robot.move(a)
             dist = map.euclidean_distance(robot.get_loc(), closest_hotspot)
             if dist < min_dist:
-                best_action = action
+                best_action = a
                 min_dist = dist
             robot.set_loc(curr_loc[0], curr_loc[1])
 
