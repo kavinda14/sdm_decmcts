@@ -1,16 +1,17 @@
 class Robot:
-    def __init__(self, x_loc, y_loc):
+    def __init__(self, bounds, map):
         #Variables that changes
-        self.x_loc = x_loc
-        self.y_loc = y_loc
+        self.x_loc = 0
+        self.y_loc = 0
         self.path = list() #Variable to track where the robot has been
         self.index = 0
 
         #Static variables
-        self.start_loc = x_loc, y_loc
+        self.start_loc = self.x_loc, self.y_loc
         self.velocity = 1.0
         self.sensing_range = 1.0
-        self.lim = (0,10)
+        self.lim = bounds
+        self.map = map
 
     def reset_robot(self):
         self.x_loc = self.start_loc[0]
@@ -20,7 +21,26 @@ class Robot:
     def check_valid_loc(self):
         x = self.x_loc
         y = self.y_loc
-        return x >= self.lim[0] and x <= self.lim[1] and y >= self.lim[0] and y <= self.lim[1]
+        in_bounds = (x >= self.lim[0] and x <= self.lim[1] and y >= self.lim[0] and y <= self.lim[1])
+
+        #Check invalid_locations from map
+        for loc in self.map.invalid_locations:
+            if x == loc[0] and y == loc[1]:
+                return False
+
+        return in_bounds
+
+    def check_new_loc(self, x_loc, y_loc):
+        x = x_loc
+        y = y_loc
+        in_bounds = (x >= self.lim[0] and x <= self.lim[1] and y >= self.lim[0] and y <= self.lim[1])
+
+        #Check invalid_locations from map
+        for loc in self.map.invalid_locations:
+            if x == loc[0] and y == loc[1]:
+                return False
+
+        return in_bounds
 
     def get_loc(self):
         return (self.x_loc, self.y_loc)
@@ -41,22 +61,22 @@ class Robot:
             return True
 
         if direction == 'left':
-            valid = self.x_loc-1 >= self.lim[0]
+            valid = self.check_new_loc(self.x_loc-1, self.y_loc)
             if valid and updateState:
                 self.x_loc -= 1
 
         elif direction == 'right':
-            valid = self.x_loc+1 <= self.lim[1]
+            valid = self.check_new_loc(self.x_loc+1, self.y_loc)
             if valid and updateState:
                 self.x_loc += 1
 
         elif direction == 'backward':
-            valid = self.y_loc+1 <= self.lim[1]
+            valid = self.check_new_loc(self.x_loc, self.y_loc+1)
             if valid and updateState:
                 self.y_loc += 1
 
         elif direction == 'forward':
-            valid = self.y_loc-1 >= self.lim[0]
+            valid = self.check_new_loc(self.x_loc, self.y_loc-1)
             if valid and updateState:
                 self.y_loc -= 1
         else:

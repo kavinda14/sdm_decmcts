@@ -69,7 +69,7 @@ class Simulator:
         # Sanity check the robot is in bounds
         for r in self.robots:
             if not r.check_valid_loc():
-                raise ValueError(f"Robot has left the map. It is at position: {r.get_loc()}, outside of the (0-100, 0-100) map boundary")
+                raise ValueError(f"Robot has left the map. It is at position: {r.get_loc()}, outside of the map boundary")
         
         visited_states = self.map.nearby_survivors(self.robots)
         self.visited_survivors = self.visited_survivors.union(visited_states)
@@ -91,6 +91,10 @@ class Simulator:
         hotspot_x = [i[0] for i in self.map.hotspots]
         hotspot_y = [i[1] for i in self.map.hotspots]
         plt.scatter(hotspot_x, hotspot_y, color='black', marker="x")
+
+        for spot in self.map.invalid_locations:
+            hole = patches.Rectangle(spot, 1, 1, linewidth=2, facecolor='black')
+            ax.add_patch(hole)
 
         for r in self.robots:
             robot_x = [p.location[0] for p in r.path]

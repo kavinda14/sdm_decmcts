@@ -1,10 +1,3 @@
-'''
-Basic MCTS implementation
-Graeme Best
-Oregon State University
-Jan 2020
-'''
-
 from cost import cost
 import random
 import copy

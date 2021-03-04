@@ -6,10 +6,10 @@ from Simulator import Simulator
 
 if __name__ == "__main__":
     #Create robots to interact with the environment
-    robot = Robot(2,2) #NOTE: I start it at 2,2 so you can see it in the visualization
+    bounds = (0, 25)
+    world = Map(bounds)
+    robot = Robot(bounds, world)
     robots = [robot]
-    #Generate random map
-    world = Map(robots)
 
     #Generate a path the robots (Dec-MCTS goes here)
     # for r in robots:

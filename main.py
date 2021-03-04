@@ -1,31 +1,39 @@
-from RandomPlanner import RandomPlanner
+from mcts import mcts
 from Map import Map
 from Robot import Robot
 from Simulator import Simulator
-from mcts_planner import mcts_planner
 
 
 if __name__ == "__main__":
     #Create robots to interact with the environment
-    robot = Robot(0,0) #NOTE: I start it at 2,2 so you can see it in the visualization
+    budget = 500
+    bounds = (0, 10)
+    max_iterations = 5000
+    world = Map(bounds)
+    robot = Robot(bounds, world)
     robots = [robot]
-    #Generate random map
-    world = Map(robots)
 
     #Generate a path the robots (Dec-MCTS goes here)
     for r in robots:
-        # planner = RandomPlanner(10000)
-        # random_path = planner.random_path(r)
-        mcts_path = mcts_planner(r, world)  # run mcts algorithm | output = a path
+        # Solve it with MCTS
+        exploration_exploitation_parameter = .1 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
+        [mcts_path, list_of_all_nodes, winner] = mcts(budget, max_iterations, exploration_exploitation_parameter, robot, world)
+
+        # Display the tree
+        print("MCTS Solution")
+        # plotTree(list_of_all_nodes, winner, False, budget, 1, exploration_exploitation_parameter)
+        # plotTree(list_of_all_nodes, winner, True, budget, 2, exploration_exploitation_parameter)
+
+        #Display path solution
         print("Path from MCTS", [p.location for p in mcts_path])
         print("Path Length: ", len(mcts_path))
         r.set_path(mcts_path)
 
-    # #Use the Simulator to evaluate the final paths
+    #Use the Simulator to evaluate the final paths
     simulator = Simulator(world, robots)
     simulator.run()
 
-    # #See the results
+    #See the results
     simulator.visualize()
     print(simulator.get_score())
     print("Done :)")

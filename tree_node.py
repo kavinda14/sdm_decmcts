@@ -1,10 +1,3 @@
-'''
-Basic MCTS implementation
-Graeme Best
-Oregon State University
-Jan 2020
-'''
-
 class TreeNode():
     def __init__(self, parent, sequence, budget, unpicked_child_actions):
         # tree properties

@@ -1,10 +1,3 @@
-'''
-Basic MCTS implementation
-Graeme Best
-Oregon State University
-Jan 2020
-'''
-
 from tree_node import TreeNode
 from reward import reward
 from cost import cost
@@ -25,7 +18,6 @@ class State():
         return str(self.label)
     def toInt(self):
         return int(self.label)
-
 
 def generate_neighbors(current_state, state_sequence, bounds):
     neighbors = list()
@@ -107,8 +99,13 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot
                 def node_is_valid(a):
                     seq_copy = copy.deepcopy(current.sequence)
                     seq_copy.append(a)
-                    end_loc = seq_copy[-1].location
+                    x, y = a.location
                     over_budget = (cost(seq_copy) > budget)
+
+                    #Check invalid_locations from map
+                    for loc in world_map.invalid_locations:
+                        if x == loc[0] and y == loc[1]:
+                            return False
 
                     return not over_budget
 
