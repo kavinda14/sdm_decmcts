@@ -51,7 +51,7 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot
     robot = copy.deepcopy(input_robot)
     world_map = copy.deepcopy(input_map)
     start_sequence = list()
-    start_sequence = [State(0, "root", robot.start_loc)]
+    start_sequence = [State(1, "root", robot.start_loc)]
     unpicked_child_actions = generate_neighbors(start_sequence[0], start_sequence, world_map.bounds)
     root = TreeNode(parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
 
@@ -128,18 +128,19 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot
                 else:
                     # Define the UCB
                     def ucb(average, n_parent, n_child):
-                        return average + exploration_exploitation_parameter * math.sqrt( (2*math.log(n_parent)) / float(n_child) )
+                        value = average + exploration_exploitation_parameter * math.sqrt( (2*math.log(n_parent)) / float(n_child) )
+                        # print("{} + ({} * sqrt(2*log({}) / {}) = {}".format(average, exploration_exploitation_parameter,n_parent, n_child, value))
+                        return value
 
                     # Pick the child that maximises the UCB
                     if not current.children:
                         break
                     else:
-                        n_parent = current.num_updates
                         best_child = -1
                         best_ucb_score = 0
                         for child_idx in range(len(current.children)):
                             child = current.children[child_idx]
-                            ucb_score = ucb(child.average_evaluation_score, n_parent, child.num_updates)
+                            ucb_score = ucb(child.average_evaluation_score, current.num_updates, child.num_updates)
                             if best_child == -1 or (ucb_score > best_ucb_score):
                                 best_child = child
                                 best_ucb_score = ucb_score

@@ -11,7 +11,7 @@ class Map:
         #NOTE: These values scale the difficulty of the problem
         self.num_survivors = 25
         self.num_hotspots = 10
-        self.num_damages = 10
+        self.num_damages = 5
 
         self.bounds = bounds
         self.invalid_locations = list()
@@ -64,8 +64,6 @@ class Map:
             rand_diff_y = np.random.uniform(-1.0, 1.0)
             survivor_loc = (hotspot_loc[0]+rand_diff_x, hotspot_loc[1]+rand_diff_y)
             self.survivor_locs.append(survivor_loc)
-
-        #TODO: Add in logic for barriers
 
     def nearby_survivors(self, robots):
         visited_states = set()

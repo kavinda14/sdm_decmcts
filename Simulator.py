@@ -58,6 +58,7 @@ class Simulator:
     def reset_game(self):
         self.iterations = 0
         self.score = 0
+        self.visited_survivors = set()
 
     def get_score(self):
         return self.score

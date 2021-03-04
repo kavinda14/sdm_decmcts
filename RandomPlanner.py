@@ -1,3 +1,4 @@
+from mcts import State
 from random import randint
 
 class RandomPlanner():
@@ -22,6 +23,6 @@ class RandomPlanner():
                 direction = 'forward'
 
             robot.move(direction)
-            path.append(robot.get_loc())
+            path.append(State(0, direction, robot.get_loc()))
         robot.reset_robot()
         return path
