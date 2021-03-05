@@ -9,8 +9,8 @@ class Robot:
         #Static variables
         self.start_loc = x_loc, y_loc
         self.velocity = 1.0
-        self.sensing_range = 2.0
-        self.lim = (0,100)
+        self.sensing_range = 1.0
+        self.lim = (0,10)
 
     def reset_robot(self):
         self.x_loc = self.start_loc[0]
@@ -24,6 +24,10 @@ class Robot:
 
     def get_loc(self):
         return (self.x_loc, self.y_loc)
+
+    def set_loc(self, x_loc, y_loc):
+        self.x_loc = x_loc
+        self.y_loc = y_loc
 
     def check_valid_move(self, direction, updateState=False):
         """ Checks if the direction is valid
@@ -83,9 +87,8 @@ class Robot:
         if self.index+1 >= len(self.path):
             return direction
 
-        current_loc = self.path[self.index]
-        next_loc = self.path[self.index+1]
-
+        current_loc = self.path[self.index].location
+        next_loc = self.path[self.index+1].location
         if next_loc[0] == current_loc[0]-1:
             direction = "left"
         if next_loc[0] == current_loc[0]+1:

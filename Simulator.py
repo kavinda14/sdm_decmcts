@@ -25,10 +25,10 @@ class Simulator:
         for x in range(0, duration):
             end = self.tick()
             if end:
-                if self.found_goal:
-                    print("Found goal at time step: {}!".format(self.get_iteration()))
-                else:
-                    print("Simulation timed out")
+                # if self.found_goal:
+                #     print("Found goal at time step: {}!".format(self.get_iteration()))
+                # else:
+                #     print("Simulation timed out")
                 break
 
     def tick(self):
@@ -46,10 +46,10 @@ class Simulator:
         self._update_map()
 
         # Update the score
-        self.score = len(self.visited_survivors)
+        self.score = len(self.visited_survivors)*25
 
-        #End when all survivors have been reached OR 10,000 iterations
-        if len(self.visited_survivors) == self.map.num_survivors or self.iterations == 10000:
+        #End when all survivors have been reached OR 1,000 iterations
+        if len(self.visited_survivors) == self.map.num_survivors or self.iterations == 1000:
             self.found_goal = len(self.visited_survivors) == self.map.num_survivors
             return True
         else:
@@ -75,21 +75,26 @@ class Simulator:
         self.visited_survivors = self.visited_survivors.union(visited_states)
 
     def visualize(self):
-        plt.xlim(self.map.bounds[0]-(self.map.bounds[0]*.05), self.map.bounds[1]+(self.map.bounds[0]*.05))
-        plt.ylim(self.map.bounds[0]-(self.map.bounds[0]*.05), self.map.bounds[1]+(self.map.bounds[0]*.05))
+        plt.xlim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
+        plt.ylim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
         ax = plt.gca()
 
         survivor_x = [i[0] for i in self.map.survivor_locs]
         survivor_y = [i[1] for i in self.map.survivor_locs]
         plt.scatter(survivor_x, survivor_y, color='tab:red')
 
+
+        survivor_x = [i[0] for i in self.visited_survivors]
+        survivor_y = [i[1] for i in self.visited_survivors]
+        plt.scatter(survivor_x, survivor_y, color='tab:green')
+
         hotspot_x = [i[0] for i in self.map.hotspots]
         hotspot_y = [i[1] for i in self.map.hotspots]
         plt.scatter(hotspot_x, hotspot_y, color='black', marker="x")
 
         for r in self.robots:
-            robot_x = [p[0] for p in r.path]
-            robot_y = [p[1] for p in r.path]
-            plt.scatter(robot_x, robot_y)
+            robot_x = [p.location[0] for p in r.path]
+            robot_y = [p.location[1] for p in r.path]
+            plt.plot(robot_x, robot_y)
 
         plt.show()

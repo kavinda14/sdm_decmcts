@@ -8,9 +8,9 @@ class Map:
             robot: list of robot objects from Robot.py
         """
         #TODO: Change these values later?
-        self.bounds = (0,100)
-        self.num_survivors = 30
-        self.num_hotspots = 5
+        self.bounds = (0,10)
+        self.num_survivors = 50
+        self.num_hotspots = 10
         diff = self.bounds[1]*0.1
 
         #Randomly place people in the environment
@@ -23,8 +23,8 @@ class Map:
             hotspot_id = np.random.randint(0, self.num_hotspots)
             hotspot_loc = self.hotspots[hotspot_id]
 
-            rand_diff_x = np.random.uniform(-5, 5)
-            rand_diff_y = np.random.uniform(-5, 5)
+            rand_diff_x = np.random.uniform(-0.5, 0.5)
+            rand_diff_y = np.random.uniform(-0.5, 0.5)
             survivor_loc = (hotspot_loc[0]+rand_diff_x, hotspot_loc[1]+rand_diff_y)
             self.survivor_locs.append(survivor_loc)
 
@@ -36,7 +36,7 @@ class Map:
             r_loc = r.get_loc()
             for s_loc in self.survivor_locs:
                 distance = self.euclidean_distance(r_loc, s_loc)
-                if distance < r.sensing_range:
+                if distance <= r.sensing_range:
                     visited_states.add(s_loc)
         return visited_states
 
