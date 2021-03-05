@@ -53,7 +53,7 @@ def generate_neighbors(current_state, state_sequence, bounds):
 
     return neighbors
 
-def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot, input_map):
+def mcts(budget, max_number_of_samples, exploration_exploitation_parameter, input_robot, input_map):
     ################################
     # Setup
     robot = copy.deepcopy(input_robot)
@@ -72,9 +72,9 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot
 
     ################################
     # Main loop
-    for i in range(max_iterations):
+    for i in range(max_number_of_samples):
         if i%100 == 0:
-            print("Percent Complete: {:.2f}%".format(i/float(max_iterations)*100))
+            print("Percent Complete: {:.2f}%".format(i/float(max_number_of_samples)*100))
 
         # Selection and Expansion
         # move recursively down the tree from root
@@ -149,6 +149,13 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot
 
                         # Recurse down the tree
                         current = best_child
+
+        #Sample Action Sequences of other Robots
+        randRobot = randint(0, 1) # Pick one of the two robots
+        randSequence = randint(0, 9) # Pick one of the 10 sequences
+        sampled_action_sequence = robot.list_of_each_other_robots_top_10_sequences[randRobot][randSequence]
+
+
 
         ################################
         # Rollout

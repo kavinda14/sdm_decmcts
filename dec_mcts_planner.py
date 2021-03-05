@@ -26,8 +26,8 @@ def dec_mcts_planner(robots, map):
 
     budget = 250
     exploration_exploitation_parameter = .2 # = 1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
-    # [path, list_of_all_nodes, winner] = mcts(budget, max_iterations, exploration_exploitation_parameter, robot, map)
-    mcts_iterations = 1000
+
+    mcts_max_number_of_samples = 10
     max_iterations = 5
     budget_complete_robot_list = []
     robot_paths = []
@@ -40,19 +40,18 @@ def dec_mcts_planner(robots, map):
 
     #Start Dec-MCTS
     while len(budget_complete_robot_list) < len(robots):  # unsure
-        sequence_set = robot.current_top_10_sequences  # unsure
-        for i in range(max_iterations):
 
+        for i in range(max_iterations):
             # Grow Tree for each Robot
             for robot in robots:
                 if robot.budget < budget:  # unsure
-                    mcts(budget, mcts_iterations, exploration_exploitation_parameter, robot, input_map)
-                    #
+                    # Robots should have calculated their 10 sets of sequences
+                    mcts(budget, mcts_max_number_of_samples, exploration_exploitation_parameter, robot, map)
                 else:
                     budget_complete_robot_list.append(robot)
                     break
 
-            # Communicate and Receive: Transfer of Sets of top 10 sequences for each Robot
+            # Communicate and Receive: Transfer of Sets of top 10 sequences for each Robot after they all grow their Tree
             for robot1 in robots:
                 for robot2 in robots:
                     if robot1 != robot2:
