@@ -12,6 +12,13 @@ class Robot:
         self.sensing_range = 1.0
         self.lim = (0,10)
 
+        #Dec-MCTS items
+        self.top_10_sequences = []
+        self.top_10_sequences_other_robots = []
+        self.budget = 0
+        self.final_path = []
+
+
     def reset_robot(self):
         self.x_loc = self.start_loc[0]
         self.y_loc = self.start_loc[1]
