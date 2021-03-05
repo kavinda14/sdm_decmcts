@@ -18,6 +18,16 @@ class Robot:
         self.budget = 0
         self.final_path = []
 
+        #Robot MCTS Tree Initialization
+        self.start_sequence = None
+        self.unpicked_child_actions = None
+        self.root = None
+        self.list_of_all_nodes = None
+        self.visited_nodes = None
+
+        #Robot MCTS Tree
+        self.new_child_node = None
+
 
     def reset_robot(self):
         self.x_loc = self.start_loc[0]

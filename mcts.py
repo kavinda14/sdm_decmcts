@@ -53,23 +53,40 @@ def generate_neighbors(current_state, state_sequence, bounds):
 
     return neighbors
 
-def mcts(budget, max_number_of_samples, exploration_exploitation_parameter, input_robot, input_map):
-    ################################
+def mcts_initialize(budget, max_number_of_samples, exploration_exploitation_parameter, robot, input_map):
     # Setup
-    robot = copy.deepcopy(input_robot)
+    # robot = copy.deepcopy(robot)
     world_map = copy.deepcopy(input_map)
     start_sequence = list()
     start_sequence = [State(0, "root", robot.start_loc)]
     unpicked_child_actions = generate_neighbors(start_sequence[0], start_sequence, world_map.bounds)
-    root = TreeNode(parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
+    robot.root = TreeNode(parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
 
-    list_of_all_nodes = list()
-    list_of_all_nodes.append(root) # for debugging only
+    robot.list_of_all_nodes = list()
+    robot.list_of_all_nodes.append(robot.root)  # for debugging only
 
-    visited_nodes = set()
-    visited_nodes.add(robot.start_loc)
+    robot.visited_nodes = set()
+    robot.visited_nodes.add(robot.start_loc)
     # visited_nodes.add(root.sequence[0])
+    ################################
 
+
+def mcts(budget, max_number_of_samples, exploration_exploitation_parameter, robot, input_map):
+    # ################################
+    # # Setup
+    # robot = copy.deepcopy(robot)
+    # world_map = copy.deepcopy(input_map)
+    # start_sequence = list()
+    # start_sequence = [State(0, "root", robot.start_loc)]
+    # unpicked_child_actions = generate_neighbors(start_sequence[0], start_sequence, world_map.bounds)
+    # root = TreeNode(parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
+    #
+    # list_of_all_nodes = list()
+    # list_of_all_nodes.append(root) # for debugging only
+    #
+    # visited_nodes = set()
+    # visited_nodes.add(robot.start_loc)
+    # # visited_nodes.add(root.sequence[0])
     ################################
     # Main loop
     for i in range(max_number_of_samples):
@@ -80,7 +97,7 @@ def mcts(budget, max_number_of_samples, exploration_exploitation_parameter, inpu
         # move recursively down the tree from root
         # then add a new leaf node
         # print("Selection and Expansion")
-        current = root
+        current = robot.root
         robot.reset_robot()
 
         while True:
@@ -116,10 +133,10 @@ def mcts(budget, max_number_of_samples, exploration_exploitation_parameter, inpu
                 new_unpicked_child_actions = [a for a in new_unpicked_child_actions if node_is_valid(a)]
 
                 ##EXPANSION
-                new_child_node = TreeNode(parent=current, sequence=new_sequence, budget=new_budget_left, unpicked_child_actions=new_unpicked_child_actions)
-                current.children.append(new_child_node)
-                current = new_child_node
-                list_of_all_nodes.append(new_child_node) # for debugging only
+                robot.new_child_node = TreeNode(parent=current, sequence=new_sequence, budget=new_budget_left, unpicked_child_actions=new_unpicked_child_actions)
+                current.children.append(robot.new_child_node)
+                current = robot.new_child_node
+                robot.list_of_all_nodes.append(robot.new_child_node) # for debugging only
                 break # don't go deeper in the tree...
             else:
                 # All possible children already exist
@@ -156,7 +173,6 @@ def mcts(budget, max_number_of_samples, exploration_exploitation_parameter, inpu
         sampled_action_sequence = robot.list_of_each_other_robots_top_10_sequences[randRobot][randSequence]
 
 
-
         ################################
         # Rollout
         # print("Rollout Phase")
@@ -179,7 +195,7 @@ def mcts(budget, max_number_of_samples, exploration_exploitation_parameter, inpu
     # Extract solution
     # calculate best solution so far
     # by recursively choosing child with highest average reward
-    current = root
+    current = robot.root
     while current.children: # is not empty
         # Find the child with best score
         best_score = 0
