@@ -15,8 +15,6 @@ def run_mcts(budget, max_iterations, explore_exploit, input_robots, input_map):
     for r in robots:
         # Solve it with MCTS
         [mcts_path, list_of_all_nodes, winner] = mcts(budget, max_iterations, explore_exploit, robot, world_map)
-        print(len(list_of_all_nodes))
-        print(len(mcts_path))
 
         # Display the tree
         # print("MCTS Solution")
