@@ -8,13 +8,13 @@ from Robot import Robot
 from Simulator import Simulator
 from plot_tree import plotTree
 
-def run_mcts(budget, max_iterations, explore_exploit, input_robots, input_map):
+def run_mcts(budget, max_iterations, explore_exploit, input_robots, input_map, r_policy):
     robots = copy.deepcopy(input_robots)
     world_map = copy.deepcopy(input_map)
     #Generate a path the robots (Dec-MCTS goes here)
     for r in robots:
         # Solve it with MCTS
-        [mcts_path, list_of_all_nodes, winner] = mcts(budget, max_iterations, explore_exploit, robot, world_map)
+        [mcts_path, list_of_all_nodes, winner] = mcts(budget, max_iterations, explore_exploit, robot, world_map, r_policy)
 
         # Display the tree
         # print("MCTS Solution")
@@ -32,7 +32,7 @@ def run_mcts(budget, max_iterations, explore_exploit, input_robots, input_map):
 
     #See the results
     simulator.visualize()
-    print("MCTS Score: {}".format(simulator.get_score()))
+    print("{} MCTS Score: {}".format(r_policy, simulator.get_score()))
 
     for r in robots:
         r.reset_robot()
@@ -84,15 +84,16 @@ def run_greedy_planner(budget, input_robots, input_map):
 
 if __name__ == "__main__":
     #Create robots to interact with the environment
-    budget = 500
+    budget = 60
     bounds = (0, 10)
-    max_iterations = 1000
+    max_iterations = 5000
     exploration_exploitation_parameter = 1.0 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
     world_map = Map(bounds)
     robot = Robot(bounds, world_map)
     robots = [robot]
 
-    length_of_path = run_mcts(budget, max_iterations, exploration_exploitation_parameter, robots, world_map)
+    length_of_path = run_mcts(budget, max_iterations, exploration_exploitation_parameter, robots, world_map, 'heuristic')
+    length_of_path = run_mcts(budget, max_iterations, exploration_exploitation_parameter, robots, world_map, 'uniform')
     run_random_planner(length_of_path, robots, world_map)
     run_greedy_planner(length_of_path, robots, world_map)
     

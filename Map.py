@@ -9,9 +9,9 @@ class Map:
             robot: list of robot objects from Robot.py
         """
         #NOTE: These values scale the difficulty of the problem
-        self.num_survivors = 25
-        self.num_hotspots = 10
-        self.num_damages = 5
+        self.num_survivors = 50
+        self.num_hotspots = 2
+        self.num_damages = 0
 
         self.bounds = bounds
         self.invalid_locations = list()
@@ -60,8 +60,8 @@ class Map:
             hotspot_id = np.random.randint(0, self.num_hotspots)
             hotspot_loc = self.hotspots[hotspot_id]
 
-            rand_diff_x = np.random.uniform(-1.0, 1.0)
-            rand_diff_y = np.random.uniform(-1.0, 1.0)
+            rand_diff_x = np.random.uniform(-2.0, 2.0)
+            rand_diff_y = np.random.uniform(-2.0, 2.0)
             survivor_loc = (hotspot_loc[0]+rand_diff_x, hotspot_loc[1]+rand_diff_y)
             self.survivor_locs.append(survivor_loc)
 

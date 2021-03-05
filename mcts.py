@@ -45,7 +45,7 @@ def generate_neighbors(current_state, state_sequence, bounds):
 
     return neighbors
 
-def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot, input_map):
+def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot, input_map, rollout_policy='uniform'):
     ################################
     # Setup
     robot = copy.deepcopy(input_robot)
@@ -151,8 +151,11 @@ def mcts(budget, max_iterations, exploration_exploitation_parameter, input_robot
         ################################
         # Rollout
         # print("Rollout Phase")
-        rollout_sequence = uniform_rollout(path=current.sequence, robot=robot, budget=budget)
-        # rollout_sequence = heuristic_rollout(path=current.sequence, robot=robot, budget=budget, map=world_map)
+        rollout_sequence = None
+        if rollout_policy == 'uniform':
+            rollout_sequence = uniform_rollout(path=current.sequence, robot=robot, budget=budget)
+        else:
+            rollout_sequence = heuristic_rollout(path=current.sequence, robot=robot, budget=budget, map=world_map)
         rollout_reward = reward(action_sequence=rollout_sequence, robot=robot, map=world_map)
 
         ################################
