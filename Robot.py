@@ -22,11 +22,6 @@ class Robot:
         self.start_sequence = None
         self.unpicked_child_actions = None
         self.root = None
-        self.list_of_all_nodes = None
-        self.visited_nodes = None
-
-        #Robot MCTS Tree
-        self.new_child_node = None # unsure
 
 
     def reset_robot(self):
