@@ -3,6 +3,7 @@ from Map import Map
 from Robot import Robot
 from Simulator import Simulator
 from mcts_planner import mcts_planner
+from dec_mcts_planner import dec_mcts_planner
 
 
 if __name__ == "__main__":
@@ -20,6 +21,9 @@ if __name__ == "__main__":
         print("Path from MCTS", [p.location for p in mcts_path])
         print("Path Length: ", len(mcts_path))
         r.set_path(mcts_path)
+
+    dec_mcts_planner(robots, map) ########################## TODO
+
 
     # #Use the Simulator to evaluate the final paths
     simulator = Simulator(world, robots)

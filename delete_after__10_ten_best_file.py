@@ -21,9 +21,6 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
     start_sequence = []
     unpicked_child_actions = copy.deepcopy(action_set)
     root = TreeNode(node_id = 0, parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions)
-    list_of_top_10_nodes_sequences = []
-    list_of_top_10_nodes_ids = []
-    list_of_top_10_nodes = []
     list_of_all_nodes = []
     list_of_all_nodes.append(root) # for debugging only
     current_node = 0
@@ -146,11 +143,15 @@ def mcts( action_set, budget, max_iterations, exploration_exploitation_parameter
             parent = parent.parent
         print('====================')
         print('====================')
+
     ################################
     # Extract solution
     # calculate best solution so far
     # by recursively choosing child with highest average reward
     print('Extracting Solutions')
+    list_of_top_10_nodes_sequences = []
+    list_of_top_10_nodes_ids = []
+    list_of_top_10_nodes = []
     i = 0
     while i != 10:
         current = root

@@ -12,7 +12,7 @@ class Robot:
         self.sensing_range = 1.0
         self.lim = (0,10)
 
-        #Dec-MCTS items
+        #Dec-MCTS Items
         self.top_10_sequences = []
         self.top_10_sequences_other_robots = []
         self.budget = 0
@@ -26,7 +26,7 @@ class Robot:
         self.visited_nodes = None
 
         #Robot MCTS Tree
-        self.new_child_node = None
+        self.new_child_node = None # unsure
 
 
     def reset_robot(self):

@@ -25,10 +25,8 @@ def mcts_planner(robot, map):
 def dec_mcts_planner(robots, map):
     budget = 250
     exploration_exploitation_parameter = .2 # = 1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
-
     mcts_max_number_of_samples = 10
-    max_iterations = 5
-    budget_complete_robot_list = []
+    max_iterations = 100
     robot_paths = []
 
     # Initialize Every Robots MCTS Tree
@@ -38,7 +36,7 @@ def dec_mcts_planner(robots, map):
 
     #Start Dec-MCTS
     k = 0
-    while k < 100:    #len(budget_complete_robot_list) < len(robots):  # Computational Budget
+    while k < 100:  # Computational Budget
 
         for i in range(max_iterations):
             # Grow Tree for each Robot
