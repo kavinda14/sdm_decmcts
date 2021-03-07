@@ -1,8 +1,8 @@
 class Robot:
-    def __init__(self, bounds, map):
+    def __init__(self, x, y, bounds, map):
         #Variables that changes
-        self.x_loc = 0
-        self.y_loc = 0
+        self.x_loc = x
+        self.y_loc = y
         self.path = list() #Variable to track where the robot has been
         self.index = 0
 
@@ -12,6 +12,18 @@ class Robot:
         self.sensing_range = 1.0
         self.lim = bounds
         self.map = map
+
+        #Dec-MCTS Items
+        self.top_10_sequences = []
+        self.top_10_sequences_other_robots = []
+        self.budget = 0
+        self.final_path = []
+
+        #Robot MCTS Tree Initialization
+        self.start_sequence = None
+        self.unpicked_child_actions = None
+        self.root = None
+
 
     def reset_robot(self):
         self.x_loc = self.start_loc[0]
