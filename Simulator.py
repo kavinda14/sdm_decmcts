@@ -49,7 +49,7 @@ class Simulator:
         self.score = len(self.visited_survivors)*25
 
         #End when all survivors have been reached OR 1,000 iterations
-        if len(self.visited_survivors) == self.map.num_survivors or self.iterations == 1000:
+        if (len(self.visited_survivors) == self.map.num_survivors) or (self.iterations == 1000):
             self.found_goal = len(self.visited_survivors) == self.map.num_survivors
             return True
         else:
@@ -72,6 +72,7 @@ class Simulator:
                 raise ValueError(f"Robot has left the map. It is at position: {r.get_loc()}, outside of the (0-100, 0-100) map boundary")
         
         visited_states = self.map.nearby_survivors(self.robots)
+        # Visited states are the visited survivors.
         self.visited_survivors = self.visited_survivors.union(visited_states)
 
     def visualize(self):
