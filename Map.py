@@ -65,13 +65,12 @@ class Map:
             survivor_loc = (hotspot_loc[0]+rand_diff_x, hotspot_loc[1]+rand_diff_y)
             self.survivor_locs.append(survivor_loc)
 
-    def nearby_survivors(self, robots):
+    def nearby_survivors(self, robot_locs, sensing_range):
         visited_states = set()
-        for r in robots:
-            r_loc = r.get_loc()
+        for r_loc in robot_locs:
             for s_loc in self.survivor_locs:
                 distance = self.euclidean_distance(r_loc, s_loc)
-                if distance <= r.sensing_range:
+                if distance <= sensing_range:
                     visited_states.add(s_loc)
         return visited_states
 

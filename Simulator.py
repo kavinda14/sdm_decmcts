@@ -68,13 +68,15 @@ class Simulator:
 
     def _update_map(self):
         # Sanity check the robot is in bounds
+        r_locs = list()
         for r in self.robots:
             if not r.check_valid_loc():
                 raise ValueError(f"Robot has left the map. It is at position: {r.get_loc()}, outside of the map boundary")
+            r_locs.append(r.get_loc)
         
-        visited_states = self.map.nearby_survivors(self.robots)
-        # Visited states are the visited survivors.
-        self.visited_survivors = self.visited_survivors.union(visited_states)
+        new_survivors = self.map.nearby_survivors(r_locs, r[0].sensing_range)
+        self.visited_survivors = self.visited_survivors.union(new_survivors)
+
 
     def visualize(self):
         plt.xlim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
