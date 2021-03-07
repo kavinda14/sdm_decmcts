@@ -87,8 +87,8 @@ if __name__ == "__main__":
     #Map Parameters
     bounds = (0, 10)
     num_survivors = 50
-    num_hotspots = 10
-    num_damages = 2
+    num_hotspots = 5
+    num_damages = 3
 
     world_map = Map(bounds, num_survivors, num_hotspots, num_damages)
     robot = Robot(0, 0, bounds, world_map)
