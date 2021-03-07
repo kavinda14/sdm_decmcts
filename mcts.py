@@ -185,7 +185,7 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
                     # print("Rollout Phase")
                     rollout_sequence = uniform_rollout(path=current.sequence, robot=robot, budget=budget)
                     # rollout_sequence = heuristic_rollout(path=current.sequence, robot=robot, budget=budget, map=world_map)
-                    rollout_reward = reward(action_sequence=rollout_sequence, robot=robot, map=world_map)
+                    rollout_reward = reward(current_robot_paths=rollout_sequence, other_robot_paths=other_robots_paths, robot=robot, world_map=world_map)
 
                     ################################
                     # Back-propagation

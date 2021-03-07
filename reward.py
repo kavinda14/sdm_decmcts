@@ -9,34 +9,31 @@ import math
 from Simulator import Simulator
 import sys
 
-def reward(action_sequence, robot, map):
+def reward(current_robot_paths, other_robot_paths, robot, world_map):
 
-    unique_survivor_locs = set()
+    survivor_locs_found_by_other_robots = set()
 
-    map_before_other_robot_simulation = map
-    for sequence in robot.top_10_sequences_other_robots:    
-        simulator = Simulator(map, [robot])    
-        other_robot_map = map_before_other_robot_simulation
-        other_robot_survivor_locs = simulate_and_get_survivor_locs(robot, sequence, simulator, map)   
-        other_robot_survivor_locs.add(loc for loc in other_robot_survivor_locs)
-        map = map_before_other_robot_simulation
+    for path in other_robot_paths:
+        other_robot = Robot(2, 2)    
+        other_robot_survivor_locs = simulate_and_get_survivor_locs(other_robot, path, world_map)   
+        survivor_locs_found_by_other_robots.add(loc for loc in other_robot_survivor_locs)
 
-    # Now I'm finding the survivors for the current robot.
-    simulator = Simulator(map, [robot])
-    robot_survivor_locs = simulate_and_get_survivor_locs(robot, action_sequence, simulator, map)   
+    current_robot_survivor_locs = simulate_and_get_survivor_locs(robot, current_robot_paths, world_map)   
 
-    for loc in robot_survivor_locs:
-        if loc in unique_survivor_locs:
-            robot_survivor_locs.remove(loc)
+    for loc in current_robot_survivor_locs:
+        if loc in survivor_locs_found_by_other_robots:
+            current_robot_survivor_locs.remove(loc)
+
+    score = len(current_robot_survivor_locs)
     
-    return len(robot_survivor_locs)
+    return score
 
 
-def simulate_and_get_survivor_locs(robot, sequence, simulator, map):    
-    robot.set_path(sequence)
-    simulator = Simulator(map, [robot])
+def simulate_and_get_survivor_locs(robot, path, world_map):    
+    robot.set_path(path)
+    simulator = Simulator(world_map, [robot])
     simulator.run()
-    return map.survivor_locs
+    return simulator.visited_survivors
 
 # def reward(action_sequence, robot, map):
 #     # path_before = robot.path
@@ -72,14 +69,14 @@ def simulate_and_get_survivor_locs(robot, sequence, simulator, map):
 
 #     return score
 
-def normalize_reward(action_sequence, reward):
-    # Normalise between 0 and 1
-    max_reward = len(action_sequence) #-1
-    if max_reward == 0:
-        reward_normalised = 0
-    else:
-        reward_normalised = float(reward) / float(max_reward)
-    return reward_normalised
+# def normalize_reward(action_sequence, reward):
+#     # Normalise between 0 and 1
+#     max_reward = len(action_sequence) #-1
+#     if max_reward == 0:
+#         reward_normalised = 0
+#     else:
+#         reward_normalised = float(reward) / float(max_reward)
+#     return reward_normalised
 
 
 # def reward_graeme(action_sequence):
