@@ -1,56 +1,76 @@
 import math
 from Simulator import Simulator
+import sys
 
-def reward(action_sequence, robot, map):
-    # path_before = robot.path
-    robot.set_path(action_sequence)
-    simulator = Simulator(map, [robot])
-    simulator.run()
-    score = simulator.get_score()
-    return score
+def reward(current_robot_paths, other_robot_paths, robot, world_map):
+
+    survivor_locs_found_by_other_robots = set()
+
+    for path in other_robot_paths:
+        other_robot = Robot(2, 2)    
+        other_robot_survivor_locs = simulate_and_get_survivor_locs(other_robot, path, world_map)   
+        survivor_locs_found_by_other_robots.add(loc for loc in other_robot_survivor_locs)
+
+    current_robot_survivor_locs = simulate_and_get_survivor_locs(robot, current_robot_paths, world_map)   
+
+    for loc in current_robot_survivor_locs:
+        if loc in survivor_locs_found_by_other_robots:
+            current_robot_survivor_locs.remove(loc)
+
+    score = len(current_robot_survivor_locs)
     
-def euclidean_distance(p1, p2):
-    x1 = p1[0]
-    y1 = p1[1]
-    x2 = p2[0]
-    y2 = p2[1]
+    return score
 
-    return math.sqrt((y2-y1)**2 + (x2-x1)**2)
 
-def normalize_reward(action_sequence, reward):
-    # Normalise between 0 and 1
-    max_reward = len(action_sequence) #-1
-    if max_reward == 0:
-        reward_normalised = 0
-    else:
-        reward_normalised = float(reward) / float(max_reward)
-    return reward_normalised
-
+def simulate_and_get_survivor_locs(robot, path, world_map):    
+    robot.set_path(path)
+    simulator = Simulator(world_map, [robot])
+    simulator.run()
+    return simulator.visited_survivors
 
 # def reward(action_sequence, robot, map):
-#     hotspots = map.hotspots
-#     #It picks up an empty tuple at the start, so I just delete it.
-#     reward = 0
+#     # path_before = robot.path
+#     robot.set_path(action_sequence)
+#     simulator = Simulator(map, [robot])
+#     simulator.run()
+#     score = simulator.get_score()
 
-#     for action in action_sequence:
-#         if action.coords == ():
-#             continue
-#         rand_index = random.randint(0, len(action_sequence))
-#         closest_hotspot_distance = math.inf
-#         for hotspot in hotspots:
-#             dist = euclidean_distance(action.coords, hotspot)
-#             closest_hotspot_distance = min(closest_hotspot_distance, dist)
-#         #Notice that we are calculating a negative reward here.
-#         #Logic: closer euclidean distance to a hotspot means higher reward.
-#         reward += -closest_hotspot_distance
-#         # print(reward)
-#     # sys.exit()
+#     print(robot.top_10_sequences)
+#     sys.exit(0)
 
-#     # print(reward)
-#     # print(normalize_reward(action_sequence, reward))
-#     # sys.exit()
+#     return score
 
-#     return normalize_reward(action_sequence, reward)
+
+# def reward(current_action_sequence, other_action_sequence, robot, map):
+
+#     # old_current_action_sequence = current_action_sequence
+#     #How do you account for everything that the other robots found and I didn't?
+#     #Try evaluating all paths separately and remove the common survivor paths.
+#     #We get a list of lists for the other_action_sequences.
+
+#     for current_action in current_action_sequence:
+#         for other_action in other_action_sequence:
+#             if current_action.location == other_action.location:
+#                 current_action_sequence.remove(current_action)
+
+#     # print("Length diff: ", len(old_current_action_sequence) - len(current_action_sequence))
+
+#     robot.set_path(current_action_sequence)
+#     simulator = Simulator(map, [robot])
+#     simulator.run()
+#     score = simulator.get_score()
+
+#     return score
+
+# def normalize_reward(action_sequence, reward):
+#     # Normalise between 0 and 1
+#     max_reward = len(action_sequence) #-1
+#     if max_reward == 0:
+#         reward_normalised = 0
+#     else:
+#         reward_normalised = float(reward) / float(max_reward)
+#     return reward_normalised
+
 
 # def reward_graeme(action_sequence):
 #     # A simple reward function
