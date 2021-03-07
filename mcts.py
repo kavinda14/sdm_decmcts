@@ -69,7 +69,8 @@ def mcts_initialize(budget, robot, world_map):
 
 
 def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, exploration_exploitation_parameter, robots, input_map):
-    world_map = copy.deepcopy(input_map)
+    # world_map = copy.deepcopy(input_map)
+    world_map = input_map
     robot_paths = []
     # Initialize Every Robots MCTS Tree
     for robot in robots:
@@ -176,7 +177,7 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
                     other_robots_paths = []
                     for bot in robots:
                         randSequence = randint(0, 9)
-                        if bot != robot:
+                        if bot != robot and computational_budget == 0 :
                             sampled_action_sequence = bot.top_10_sequences[randSequence]
                             other_robots_paths.append(sampled_action_sequence)
 
@@ -227,16 +228,16 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
             list_of_top_10_nodes_ids.append(current.node_id)
             list_of_top_10_nodes.append(current)
             # Append the the node's action sequence into a list
-            print('Node: ', current.node_id)
+            # print('Node: ', current.node_id)
             solution = current.sequence
             solution = listActionSequence(solution)
             solution = direction_path_to_state_path_converter(solution, robot.start_loc)
-            print('Solution: ', solution)
+            # print('Solution: ', solution)
             list_of_top_10_nodes_sequences.append(solution)
             i += 1
-        print('Current Robots Top 10 Node List: ', list_of_top_10_nodes)
-        print('Current Robots Top 10 Node Id List: ', list_of_top_10_nodes_ids)
-        print('Current Robots Top 10 Sequences List: ', list_of_top_10_nodes_sequences)
+        # print('Current Robot Top 10 Node List: ', list_of_top_10_nodes)
+        print('Current Robot Top 10 Node Id List: ', list_of_top_10_nodes_ids)
+        print('Current Robot Top 10 Sequences List: ', list_of_top_10_nodes_sequences)
 
         k += 1
 
@@ -260,10 +261,12 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
                     best_score = score
             current = best_child
         robot.final_path = current.sequence
+        direction_path_to_state_path_converter(robot.final_path, robot.start_loc)
 
     print("DEC_MCTS Solution")
     for robot in robots:
         robot_paths.append(robot.final_path)
+
     print(robot_paths)
     return robot_paths
 

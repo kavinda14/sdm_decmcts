@@ -9,7 +9,9 @@ from mcts import dec_mcts
 if __name__ == "__main__":
     #Create robots to interact with the environment
     robot = Robot(0,0) #NOTE: I start it at 2,2 so you can see it in the visualization
+    robot2 = Robot(10, 10)
     robots = [robot]
+    # robots = [robot, robot2]
     #Generate random map
     world = Map(robots)
 
@@ -27,6 +29,7 @@ if __name__ == "__main__":
     computational_budget = 2
     dec_mcts_paths = dec_mcts(budget, mcts_max_number_of_samples, computational_budget, exploration_exploitation_parameter, robots, world) # TODO
     print("Number of Robot Paths: ", len(dec_mcts_paths))
+    print("Dec_mcts_paths")
     # r.set_path(mcts_path)
 
     # #Use the Simulator to evaluate the final paths
