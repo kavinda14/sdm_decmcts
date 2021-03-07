@@ -259,7 +259,6 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
                     best_score = score
             current = best_child
         robot.final_path = current.sequence
-        direction_path_to_state_path_converter(robot.final_path, robot.start_loc)
 
     print("DEC_MCTS Solution")
     for robot in robots:
@@ -267,10 +266,6 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
 
     print(robot_paths)
     return robot_paths
-
-
-
-
 
 
 def all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes):
