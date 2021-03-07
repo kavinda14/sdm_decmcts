@@ -199,10 +199,8 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
                         # Recurse up the tree
                         parent = parent.parent
 
-        # Get top 10 sequences for the current robot - patrick TODO
-
-        # Extract 10 Best Sequences
-        print('Extracting Solutions')
+        # Extract 10 Best Sequences from Current Robot
+        print('Extracting Top 10 Solutions')
         list_of_top_10_nodes_sequences = []
         list_of_top_10_nodes_ids = []
         list_of_top_10_nodes = []
@@ -294,7 +292,7 @@ def listActionSequence(action_sequence):
     action_list = []
     for action in action_sequence:
         action_list.append(action.label)
-    print("MCTS Solution as Directions: ", action_list)
+    # print("MCTS Solution as Directions: ", action_list)
     return action_list
 
 def direction_path_to_state_path_converter(solution,starting_coor):
