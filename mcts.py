@@ -74,7 +74,8 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
         # for p in range(computational_budget):
         #      if p % 100 == 0:
         #          print("Percent Complete: {:.2f}%".format(p / float(computational_budget) * 100))
-        print("Computational Budget: ", k)
+
+        # print("Computational Budget: ", k)
         for i in range(mcts_max_number_of_samples):
             # Grow Tree for each Robot
             for robot in robots:
@@ -195,7 +196,7 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
                         parent = parent.parent
 
         # Extract 10 Best Sequences from Current Robot
-        print('Extracting Top 10 Solutions')
+        # print('Extracting Top 10 Solutions')
         list_of_top_10_nodes_sequences = []
         list_of_top_10_nodes_ids = []
         list_of_top_10_nodes = []
@@ -220,26 +221,17 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
             # Append each iteration's node with the best average evaluation score
             list_of_top_10_nodes_ids.append(current.node_id)
             list_of_top_10_nodes.append(current)
+
             # Append the the node's action sequence into a list
-            # print('Node: ', current.node_id)
-            solution = current.sequence
-            solution = listActionSequence(solution)
-            solution = direction_path_to_state_path_converter(solution, robot.start_loc)
-            # print('Solution: ', solution)
+            solution = [p.location for p in current.sequence]
             list_of_top_10_nodes_sequences.append(solution)
             i += 1
-        # print('Current Robot Top 10 Node List: ', list_of_top_10_nodes)
-        print('Current Robot Top 10 Node Id List: ', list_of_top_10_nodes_ids)
-        print('Current Robot Top 10 Sequences List: ', list_of_top_10_nodes_sequences)
-
         k += 1
 
     ################################
     # Extract best solution from all the ROBOTS
     # calculate best solution so far
     # by recursively choosing child with highest average reward
-
-    solutions = []
     for robot in robots:
         current = robot.root
         while current.children: # is not empty
@@ -255,11 +247,9 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
             current = best_child
         robot.final_path = current.sequence
 
-    print("DEC_MCTS Solution")
     for robot in robots:
         robot_paths.append(robot.final_path)
 
-    print(robot_paths)
     return robot_paths
 
 
