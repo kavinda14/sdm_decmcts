@@ -51,6 +51,7 @@ def mcts_initialize(budget, robot, world_map):
     # Setup
     # robot = copy.deepcopy(robot)
     # world_map = copy.deepcopy(input_map)
+    print("MCTS initialize")
     start_sequence = list()
     start_sequence = [State(1, "root", robot.start_loc)]
     unpicked_child_actions = generate_neighbors(start_sequence[0], start_sequence, world_map.bounds)
@@ -71,6 +72,7 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
     # Start Dec-MCTS
     k = 0
     while k < computational_budget:  # Computational Budget
+        print("B: ",k )
         # for p in range(computational_budget):
         #      if p % 100 == 0:
         #          print("Percent Complete: {:.2f}%".format(p / float(computational_budget) * 100))
@@ -193,37 +195,41 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                     # Recurse up the tree
                     parent = parent.parent
 
+
+
+
         # Extract 10 Best Sequences from Current Robot
-        # print('Extracting Top 10 Solutions')
-        list_of_top_10_nodes_sequences = []
-        list_of_top_10_nodes_ids = []
-        list_of_top_10_nodes = []
-        i = 0
-        while i != 10:
-            current = robot.root
-            while current.children and all_children_nodes_are_not_in_the_list(current,
-                                                                              list_of_top_10_nodes_ids):  # is not empty
-                # Find the child with best score
-                best_score = 0
-                best_child = -1
-                for child_idx in range(len(current.children)):
-                    child = current.children[child_idx]
-                    # Only consider child nodes who have not been placed in the list - pat
-                    if not child.node_id in list_of_top_10_nodes_ids:
-                        score = child.average_evaluation_score
-                        if best_child == -1 or (score > best_score):
-                            best_child = child
-                            best_score = score
-                current = best_child
+        print('Extracting Top 10 Solutions')
+        for robot in robots:
+            list_of_top_10_nodes_sequences = []
+            list_of_top_10_nodes_ids = []
+            list_of_top_10_nodes = []
+            i = 0
+            while i != 10:
+                current = robot.root
+                while current.children and all_children_nodes_are_not_in_the_list(current,
+                                                                                  list_of_top_10_nodes_ids):  # is not empty
+                    # Find the child with best score
+                    best_score = 0
+                    best_child = -1
+                    for child_idx in range(len(current.children)):
+                        child = current.children[child_idx]
+                        # Only consider child nodes who have not been placed in the list - pat
+                        if not child.node_id in list_of_top_10_nodes_ids:
+                            score = child.average_evaluation_score
+                            if best_child == -1 or (score > best_score):
+                                best_child = child
+                                best_score = score
+                    current = best_child
 
-            # Append each iteration's node with the best average evaluation score
-            list_of_top_10_nodes_ids.append(current.node_id)
-            list_of_top_10_nodes.append(current)
+                # Append each iteration's node with the best average evaluation score
+                list_of_top_10_nodes_ids.append(current.node_id)
+                list_of_top_10_nodes.append(current)
 
-            # Append the the node's action sequence into a list
-            solution = [p.location for p in current.sequence]
-            list_of_top_10_nodes_sequences.append(solution)
-            i += 1
+                # Append the the node's action sequence into a list
+                solution =   [p.location for p in current.sequence]
+                list_of_top_10_nodes_sequences.append(solution)
+                i += 1
         k += 1
 
     ################################

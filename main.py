@@ -79,21 +79,23 @@ def run_greedy_planner(budget, input_robots, input_map):
 
 if __name__ == "__main__":
     #Dec-MCTS Parameters
-    budget = 60
-    computational_budget = 10
-    num_samples = 10
+    budget = 1000
+    computational_budget = 2
+    num_samples = 20
     exploration_exploitation_parameter = 1.0 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
 
     #Map Parameters
-    bounds = (0, 10)
+    bounds = (0, 25)
     num_survivors = 50
-    num_hotspots = 10
-    num_damages = 2
+    num_hotspots = 15
+    num_damages = 10
 
     world_map = Map(bounds, num_survivors, num_hotspots, num_damages)
     robot = Robot(0, 0, bounds, world_map)
-    robot2 = Robot(10, 10, bounds, world_map)
-    robots = [robot, robot2]
+    robot2 = Robot(20, 10, bounds, world_map)
+    robot3 = Robot(10,20, bounds, world_map)
+    robot4 = Robot(25,25, bounds, world_map)
+    robots = [robot, robot2, robot3, robot4]
 
     length_of_path = run_dec_mcts(budget, num_samples, computational_budget, exploration_exploitation_parameter, robots, world_map, 'heuristic')
     length_of_path = run_dec_mcts(budget, num_samples, computational_budget, exploration_exploitation_parameter, robots, world_map, 'uniform')
