@@ -29,6 +29,7 @@ class Robot:
         self.x_loc = self.start_loc[0]
         self.y_loc = self.start_loc[1]
         self.path = list()
+        self.index = 0
     
     def check_valid_loc(self):
         x = self.x_loc
@@ -107,20 +108,20 @@ class Robot:
     def follow_direction_path(self):
         """ Select direction that move robot along a pre-computed path"""
         direction = None
-        if self.index+1 >= len(self.path):
+        if self.index+1 >= len(self.final_path):
             return direction
-        direction = self.path[self.index]
+        direction = self.final_path[self.index]
         self.index += 1
         return direction
 
     def follow_path(self):
         """ Select direction that move robot along a pre-computed path"""
         direction = None
-        if self.index+1 >= len(self.path):
+        if self.index+1 >= len(self.final_path):
             return direction
 
-        current_loc = self.path[self.index].location
-        next_loc = self.path[self.index+1].location
+        current_loc = self.final_path[self.index].location
+        next_loc = self.final_path[self.index+1].location
         if next_loc[0] == current_loc[0]-1:
             direction = "left"
         if next_loc[0] == current_loc[0]+1:

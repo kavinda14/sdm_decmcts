@@ -1,4 +1,5 @@
 import copy
+from random import random
 from GreedyPlanner import GreedyPlanner
 from RandomPlanner import RandomPlanner
 from mcts import dec_mcts
@@ -12,7 +13,9 @@ def run_dec_mcts(budget, num_samples, c_budget, explore_exploit, input_robots, i
     world_map = copy.deepcopy(input_map)
 
     #Generate a path the robots (Dec-MCTS goes here)
-    dec_mcts_paths = dec_mcts(budget, num_samples, c_budget, exploration_exploitation_parameter, robots, world_map) # TODO
+    dec_mcts_paths = dec_mcts(budget, num_samples, c_budget, exploration_exploitation_parameter, robots, world_map)
+    for r in robots:
+        r.reset_robot()
 
     #Use the Simulator to evaluate the final paths
     simulator = Simulator(world_map, robots)
@@ -20,7 +23,7 @@ def run_dec_mcts(budget, num_samples, c_budget, explore_exploit, input_robots, i
 
     #See the results
     simulator.visualize()
-    print("{} MCTS Score: {}".format(r_policy, simulator.get_score()))
+    print("{} Dec-MCTS Score: {}".format(r_policy, simulator.get_score()))
 
     for r in robots:
         r.reset_robot()
@@ -43,8 +46,8 @@ def run_random_planner(budget, input_robots, input_map):
     for r in robots:
         planner = RandomPlanner(budget)
         random_path = planner.random_path(r)
-        r.set_path(random_path)
-
+        r.final_path = random_path
+        
     #Use the Simulator to evaluate the final paths
     simulator = Simulator(world_map, robots)
     simulator.run()
@@ -63,7 +66,7 @@ def run_greedy_planner(budget, input_robots, input_map):
     for r in robots:
         planner = GreedyPlanner(budget)
         greedy_path = planner.greedy_path(r, world_map)
-        r.set_path(greedy_path)
+        r.final_path = greedy_path
 
     #Use the Simulator to evaluate the final paths
     simulator = Simulator(world_map, robots)
@@ -75,15 +78,21 @@ def run_greedy_planner(budget, input_robots, input_map):
     simulator.reset_game()
 
 if __name__ == "__main__":
-    #Create robots to interact with the environment
+    #Dec-MCTS Parameters
     budget = 60
-    bounds = (0, 10)
-    computational_budget = 2
+    computational_budget = 10
     num_samples = 10
     exploration_exploitation_parameter = 1.0 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
-    world_map = Map(bounds)
+
+    #Map Parameters
+    bounds = (0, 10)
+    num_survivors = 50
+    num_hotspots = 10
+    num_damages = 2
+
+    world_map = Map(bounds, num_survivors, num_hotspots, num_damages)
     robot = Robot(0, 0, bounds, world_map)
-    robot2 = Robot(10, 10,bounds, world_map)
+    robot2 = Robot(10, 10, bounds, world_map)
     robots = [robot, robot2]
 
     length_of_path = run_dec_mcts(budget, num_samples, computational_budget, exploration_exploitation_parameter, robots, world_map, 'heuristic')

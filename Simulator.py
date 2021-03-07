@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -10,8 +11,8 @@ class Simulator:
         map_gt: The map to be explored
         robot: the Robot object from RobotClass.py
         """
-        self.map = world_map
-        self.robots = robots
+        self.map = copy.deepcopy(world_map)
+        self.robots = copy.deepcopy(robots)
 
         #Container to identify, which survivors have been seen by the robots
         self.visited_survivors = set()
@@ -21,14 +22,10 @@ class Simulator:
         self.found_goal = False
 
     def run(self):
-        duration = max([len(r.path) for r in self.robots])
+        duration = max([len(r.final_path) for r in self.robots])
         for x in range(0, duration):
             end = self.tick()
             if end:
-                # if self.found_goal:
-                #     print("Found goal at time step: {}!".format(self.get_iteration()))
-                # else:
-                #     print("Simulation timed out")
                 break
 
     def tick(self):
@@ -72,9 +69,9 @@ class Simulator:
         for r in self.robots:
             if not r.check_valid_loc():
                 raise ValueError(f"Robot has left the map. It is at position: {r.get_loc()}, outside of the map boundary")
-            r_locs.append(r.get_loc)
+            r_locs.append(r.get_loc())
         
-        new_survivors = self.map.nearby_survivors(r_locs, r[0].sensing_range)
+        new_survivors = self.map.nearby_survivors(r_locs, self.robots[0].sensing_range)
         self.visited_survivors = self.visited_survivors.union(new_survivors)
 
 
@@ -82,11 +79,11 @@ class Simulator:
         plt.xlim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
         plt.ylim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
         ax = plt.gca()
+        print(len(self.visited_survivors))
 
         survivor_x = [i[0] for i in self.map.survivor_locs]
         survivor_y = [i[1] for i in self.map.survivor_locs]
         plt.scatter(survivor_x, survivor_y, color='tab:red')
-
 
         survivor_x = [i[0] for i in self.visited_survivors]
         survivor_y = [i[1] for i in self.visited_survivors]
@@ -101,8 +98,8 @@ class Simulator:
             ax.add_patch(hole)
 
         for r in self.robots:
-            robot_x = [p.location[0] for p in r.path]
-            robot_y = [p.location[1] for p in r.path]
+            robot_x = [p.location[0] for p in r.final_path]
+            robot_y = [p.location[1] for p in r.final_path]
             plt.plot(robot_x, robot_y)
 
         plt.show()

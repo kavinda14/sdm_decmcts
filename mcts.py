@@ -59,10 +59,10 @@ def mcts_initialize(budget, robot, world_map):
                     node_id=0)
 
 
-def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, exploration_exploitation_parameter, robots, input_map):
-    # world_map = copy.deepcopy(input_map)
-    world_map = input_map
+def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots, input_map, rollout_policy='uniform'):
+    world_map = copy.deepcopy(input_map)
     robot_paths = []
+
     # Initialize Every Robots MCTS Tree
     for robot in robots:
         # MCTS Tree initialization
@@ -76,7 +76,7 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
         #          print("Percent Complete: {:.2f}%".format(p / float(computational_budget) * 100))
 
         # print("Computational Budget: ", k)
-        for i in range(mcts_max_number_of_samples):
+        for i in range(num_samples):
             # Grow Tree for each Robot
             for robot in robots:
                 # Robots determines their top 10 best sets of actions(sequences)
@@ -126,8 +126,7 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
                         new_unpicked_child_actions = [a for a in new_unpicked_child_actions if node_is_valid(a)]
 
                         ##EXPANSION
-                        new_child_node = TreeNode(parent=current, sequence=new_sequence,
-                                                        budget=new_budget_left,
+                        new_child_node = TreeNode(parent=current, sequence=new_sequence, budget=new_budget_left,
                                                         unpicked_child_actions=new_unpicked_child_actions,
                                                         node_id = current.node_id + 1)
 
@@ -145,8 +144,7 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
                         else:
                             # Define the UCB
                             def ucb(average, n_parent, n_child):
-                                return average + exploration_exploitation_parameter * math.sqrt(
-                                    (2 * math.log(n_parent)) / float(n_child))
+                                return average + explore_exploit * math.sqrt((2 * math.log(n_parent)) / float(n_child))
 
                             # Pick the child that maximises the UCB
                             if not current.children:
@@ -164,27 +162,30 @@ def dec_mcts(budget, mcts_max_number_of_samples, computational_budget, explorati
 
                                 # Recurse down the tree
                                 current = best_child
-                    #Communications
-                    # Sample Action Sequences of other Robots
-                    # Pick one of the 10 sequences
-                    other_robots_paths = []
-                    for bot in robots:
-                        randSequence = randint(0, 9)
-                        if bot != robot and computational_budget == 0 :
-                            sampled_action_sequence = bot.top_10_sequences[randSequence]
-                            other_robots_paths.append(sampled_action_sequence)
 
                 ################################
-                # Rollout
-                # print("Rollout Phase")
-                rollout_sequence = uniform_rollout(path=current.sequence, robot=robot, budget=budget)
-                # rollout_sequence = heuristic_rollout(path=current.sequence, robot=robot, budget=budget, map=world_map)
-                rollout_reward = reward(current_robot_paths=rollout_sequence, other_robot_paths=other_robots_paths, world_map=world_map)
+                # Communications
+                # Sample Action Sequences of other Robots
+                # Pick one of the 10 sequences
+                other_robots_paths = []
+                for bot in robots:
+                    randSequence = randint(0, 9)
+                    if bot != robot and computational_budget == 0 :
+                        sampled_action_sequence = bot.top_10_sequences[randSequence]
+                        other_robots_paths.append(sampled_action_sequence)
+
+                ################################
+                # Rollout & Reward
+                rollout_sequence = list()
+                if rollout_policy == 'uniform':
+                    rollout_sequence = uniform_rollout(current.sequence, robot, budget)
+                else:
+                    rollout_sequence = heuristic_rollout(current.sequence, robot, budget)
+                rollout_reward = reward(rollout_sequence, other_robots_paths, robot.sensing_range, world_map)
 
                 ################################
                 # Back-propagation
                 # update stats of all nodes from current back to root node
-                # print("Back-Propagation Phase")
                 parent = current
                 while parent:  # is not None
                     # Update the average

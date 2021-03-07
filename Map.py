@@ -3,15 +3,15 @@ import sys
 import numpy as np
 
 class Map:
-    def __init__(self, bounds):
+    def __init__(self, bounds, num_survivors, num_hotspots, num_damages):
         """
         Inputs:
             robot: list of robot objects from Robot.py
         """
         #NOTE: These values scale the difficulty of the problem
-        self.num_survivors = 50
-        self.num_hotspots = 2
-        self.num_damages = 0
+        self.num_survivors = num_survivors
+        self.num_hotspots = num_hotspots
+        self.num_damages = num_damages
 
         self.bounds = bounds
         self.invalid_locations = list()
