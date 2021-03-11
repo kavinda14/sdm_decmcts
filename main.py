@@ -80,7 +80,7 @@ def run_greedy_planner(budget, input_robots, input_map):
 if __name__ == "__main__":
     #Dec-MCTS Parameters
     budget = 1000
-    computational_budget = 2
+    computational_budget = 50
     num_samples = 20
     exploration_exploitation_parameter = 1.0 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
 
@@ -102,4 +102,4 @@ if __name__ == "__main__":
     run_random_planner(length_of_path, robots, world_map)
     run_greedy_planner(length_of_path, robots, world_map)
     
-    print("Done :)")
+    print("Done :')")

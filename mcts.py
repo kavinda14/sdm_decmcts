@@ -51,7 +51,6 @@ def mcts_initialize(budget, robot, world_map):
     # Setup
     # robot = copy.deepcopy(robot)
     # world_map = copy.deepcopy(input_map)
-    print("MCTS initialize")
     start_sequence = list()
     start_sequence = [State(1, "root", robot.start_loc)]
     unpicked_child_actions = generate_neighbors(start_sequence[0], start_sequence, world_map.bounds)
@@ -72,7 +71,6 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
     # Start Dec-MCTS
     k = 0
     while k < computational_budget:  # Computational Budget
-        print("B: ",k )
         # for p in range(computational_budget):
         #      if p % 100 == 0:
         #          print("Percent Complete: {:.2f}%".format(p / float(computational_budget) * 100))
@@ -199,11 +197,11 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
 
 
         # Extract 10 Best Sequences from Current Robot
-        print('Extracting Top 10 Solutions')
+        # append each to robot.
         for robot in robots:
-            list_of_top_10_nodes_sequences = []
+            list_of_top_10_nodes_sequences = [] #for troubleshooting
             list_of_top_10_nodes_ids = []
-            list_of_top_10_nodes = []
+            list_of_top_10_nodes = [] #for troubleshooting
             i = 0
             while i != 10:
                 current = robot.root
@@ -222,13 +220,16 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                                 best_score = score
                     current = best_child
 
-                # Append each iteration's node with the best average evaluation score
-                list_of_top_10_nodes_ids.append(current.node_id)
-                list_of_top_10_nodes.append(current)
-
+                # # for troubleshooting
+                # # Append each iteration's node with the best average evaluation score
+                # list_of_top_10_nodes_ids.append(current.node_id)
+                # list_of_top_10_nodes.append(current)
+                #
                 # Append the the node's action sequence into a list
-                solution =   [p.location for p in current.sequence]
-                list_of_top_10_nodes_sequences.append(solution)
+                # solution =   [p.location for p in current.sequence]
+                # list_of_top_10_nodes_sequences.append(solution)
+                robot.top_10_sequences.append(current.sequence)
+
                 i += 1
         k += 1
 
@@ -236,6 +237,7 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
     # Extract best solution from all the ROBOTS
     # calculate best solution so far
     # by recursively choosing child with highest average reward
+
     for robot in robots:
         current = robot.root
         while current.children: # is not empty
