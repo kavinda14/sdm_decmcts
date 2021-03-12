@@ -11,6 +11,7 @@ import sys
 
 class State():
     '''Container for states in the graph'''
+
     def __init__(self, id, label, location):
         self.id = id
         self.label = label
@@ -18,34 +19,37 @@ class State():
 
     def toString(self):
         return str(self.label)
+
     def toInt(self):
         return int(self.label)
+
 
 def generate_neighbors(current_state, state_sequence, bounds):
     neighbors = list()
     current_loc = current_state.location
     sequence = [s.location for s in state_sequence]
-    if current_loc[0]-1 >= bounds[0]: #left
+    if current_loc[0]-1 >= bounds[0]:  # left
         new_loc = (current_loc[0]-1, current_loc[1])
         if not new_loc in sequence:
             neighbors.append(State(1, "left", new_loc))
 
-    if current_loc[0]+1 <= bounds[1]: #right
+    if current_loc[0]+1 <= bounds[1]:  # right
         new_loc = (current_loc[0]+1, current_loc[1])
         if not new_loc in sequence:
             neighbors.append(State(2, "right", new_loc))
 
-    if current_loc[1]+1 <= bounds[1]: #forwards
+    if current_loc[1]+1 <= bounds[1]:  # forwards
         new_loc = (current_loc[0], current_loc[1]+1)
         if not new_loc in sequence:
             neighbors.append(State(3, "forward", new_loc))
 
-    if current_loc[1]-1 >= bounds[0]: #backwards
+    if current_loc[1]-1 >= bounds[0]:  # backwards
         new_loc = (current_loc[0], current_loc[1]-1)
         if not new_loc in sequence:
             neighbors.append(State(4, "backwards", new_loc))
 
     return neighbors
+
 
 def mcts_initialize(budget, robot, world_map):
     # Setup
@@ -53,7 +57,8 @@ def mcts_initialize(budget, robot, world_map):
     # world_map = copy.deepcopy(input_map)
     start_sequence = list()
     start_sequence = [State(1, "root", robot.start_loc)]
-    unpicked_child_actions = generate_neighbors(start_sequence[0], start_sequence, world_map.bounds)
+    unpicked_child_actions = generate_neighbors(
+        start_sequence[0], start_sequence, world_map.bounds)
 
     return TreeNode(parent=None, sequence=start_sequence, budget=budget, unpicked_child_actions=unpicked_child_actions,
                     node_id=0)
@@ -91,8 +96,10 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                     # Are there any children to be added here?
                     if current.unpicked_child_actions:  # if not empty
                         # Pick one of the children that haven't been added | Select a valid direction
-                        num_unpicked_child_actions = len(current.unpicked_child_actions)
-                        child_index = random.randint(0, num_unpicked_child_actions - 1)
+                        num_unpicked_child_actions = len(
+                            current.unpicked_child_actions)
+                        child_index = random.randint(
+                            0, num_unpicked_child_actions - 1)
                         child_action = current.unpicked_child_actions[child_index]
 
                         # Move the robot
@@ -115,7 +122,7 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                             x, y = a.location
                             over_budget = (cost(seq_copy) > budget)
 
-                            #Check invalid_locations from map
+                            # Check invalid_locations from map
                             for loc in world_map.invalid_locations:
                                 if x == loc[0] and y == loc[1]:
                                     return False
@@ -123,12 +130,13 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                             return not over_budget
 
                         # removes any new children if from the child if they go over budget or are invalid action
-                        new_unpicked_child_actions = [a for a in new_unpicked_child_actions if node_is_valid(a)]
+                        new_unpicked_child_actions = [
+                            a for a in new_unpicked_child_actions if node_is_valid(a)]
 
-                        ##EXPANSION
+                        # EXPANSION
                         new_child_node = TreeNode(parent=current, sequence=new_sequence, budget=new_budget_left,
-                                                        unpicked_child_actions=new_unpicked_child_actions,
-                                                        node_id = current.node_id + 1)
+                                                  unpicked_child_actions=new_unpicked_child_actions,
+                                                  node_id=current.node_id + 1)
 
                         current.children.append(new_child_node)
                         current = new_child_node
@@ -155,7 +163,8 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                                 best_ucb_score = 0
                                 for child_idx in range(len(current.children)):
                                     child = current.children[child_idx]
-                                    ucb_score = ucb(child.average_evaluation_score, n_parent, child.num_updates)
+                                    ucb_score = ucb(
+                                        child.average_evaluation_score, n_parent, child.num_updates)
                                     if best_child == -1 or (ucb_score > best_ucb_score):
                                         best_child = child
                                         best_ucb_score = ucb_score
@@ -170,7 +179,7 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                 other_robots_paths = []
                 for bot in robots:
                     randSequence = randint(0, 9)
-                    if bot != robot and computational_budget == 0 :
+                    if bot != robot and computational_budget == 0:
                         sampled_action_sequence = bot.top_10_sequences[randSequence]
                         other_robots_paths.append(sampled_action_sequence)
 
@@ -178,10 +187,13 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                 # Rollout & Reward
                 rollout_sequence = list()
                 if rollout_policy == 'uniform':
-                    rollout_sequence = uniform_rollout(current.sequence, robot, budget)
+                    rollout_sequence = uniform_rollout(
+                        current.sequence, robot, budget)
                 else:
-                    rollout_sequence = heuristic_rollout(current.sequence, robot, budget)
-                rollout_reward = reward(rollout_sequence, other_robots_paths, robot.sensing_range, world_map)
+                    rollout_sequence = heuristic_rollout(
+                        current.sequence, robot, budget)
+                rollout_reward = reward(
+                    rollout_sequence, other_robots_paths, robot.sensing_range, world_map)
 
                 ################################
                 # Back-propagation
@@ -193,46 +205,50 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                     # Recurse up the tree
                     parent = parent.parent
 
-        ################################
         # Extract 10 Best Sequences from Current Robot
-        # print('Extracting Top 10 Solutions')
-        list_of_top_10_nodes_sequences = []
-        list_of_top_10_nodes_ids = []
-        list_of_top_10_nodes = []
-        i = 0
-        while i != 10:
-            current = robot.root
-            while current.children and all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes_ids):  # is not empty
-                # Find the child with best score
-                best_score = 0
-                best_child = -1
-                for child_idx in range(len(current.children)):
-                    child = current.children[child_idx]
-                    # Only consider child nodes who have not been placed in the list - pat
-                    if not child.node_id in list_of_top_10_nodes_ids:
-                        score = child.average_evaluation_score
-                        if best_child == -1 or (score > best_score):
-                            best_child = child
-                            best_score = score
-                current = best_child
+        # append each to robot.
+        for robot in robots:
+            list_of_top_10_nodes_sequences = []  # for troubleshooting
+            list_of_top_10_nodes_ids = []
+            list_of_top_10_nodes = []  # for troubleshooting
+            i = 0
+            while i != 10:
+                current = robot.root
+                # is not empty
+                while current.children and all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes_ids):
+                    # Find the child with best score
+                    best_score = 0
+                    best_child = -1
+                    for child_idx in range(len(current.children)):
+                        child = current.children[child_idx]
+                        # Only consider child nodes who have not been placed in the list - pat
+                        if not child.node_id in list_of_top_10_nodes_ids:
+                            score = child.average_evaluation_score
+                            if best_child == -1 or (score > best_score):
+                                best_child = child
+                                best_score = score
+                    current = best_child
 
-            # Append each iteration's node with the best average evaluation score
-            list_of_top_10_nodes_ids.append(current.node_id)
-            list_of_top_10_nodes.append(current)
-
-            # Append the the node's action sequence into a list
-            solution = [p.location for p in current.sequence]
-            list_of_top_10_nodes_sequences.append(solution)
-            i += 1
+                # # for troubleshooting
+                # # Append each iteration's node with the best average evaluation score
+                # list_of_top_10_nodes_ids.append(current.node_id)
+                # list_of_top_10_nodes.append(current)
+                #
+                # Append the the node's action sequence into a list
+                # solution =   [p.location for p in current.sequence]
+                # list_of_top_10_nodes_sequences.append(solution)
+                robot.top_10_sequences.append(current.sequence)
+                i += 1
         k += 1
 
     ################################
     # Extract best solution from all the ROBOTS
     # calculate best solution so far
     # by recursively choosing child with highest average reward
+
     for robot in robots:
         current = robot.root
-        while current.children: # is not empty
+        while current.children:  # is not empty
             # Find the child with best score
             best_score = 0
             best_child = -1
@@ -266,6 +282,7 @@ def all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes):
     else:
         return False
 
+
 def listActionSequence(action_sequence):
     action_list = []
     for action in action_sequence:
@@ -273,7 +290,8 @@ def listActionSequence(action_sequence):
     # print("MCTS Solution as Directions: ", action_list)
     return action_list
 
-def direction_path_to_state_path_converter(solution,starting_coor):
+
+def direction_path_to_state_path_converter(solution, starting_coor):
     direction_list = solution
 
     state_list = []
@@ -296,12 +314,3 @@ def direction_path_to_state_path_converter(solution,starting_coor):
 
     print("MCTS Solution as States: ", state_list)
     return state_list
-
-
-
-
-
-
-
-
-
