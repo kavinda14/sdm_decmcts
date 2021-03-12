@@ -13,7 +13,7 @@ def run_dec_mcts(budget, num_samples, c_budget, explore_exploit, input_robots, i
     world_map = copy.deepcopy(input_map)
 
     #Generate a path the robots (Dec-MCTS goes here)
-    dec_mcts_paths = dec_mcts(budget, num_samples, c_budget, exploration_exploitation_parameter, robots, world_map)
+    dec_mcts_paths = dec_mcts(budget, num_samples, c_budget, explore_exploit, robots, world_map)
     for r in robots:
         r.reset_robot()
 
@@ -60,17 +60,17 @@ def run_random_planner(budget, input_robots, input_map):
 def run_greedy_planner(budget, input_robots, input_map):
     robots = copy.deepcopy(input_robots)  
     world_map = copy.deepcopy(input_map)  
-    for r in robots:
-        r.reset_robot()
+    # for r in robots:
+    #     r.reset_robot()
         
-    for r in robots:
-        planner = GreedyPlanner(budget)
-        greedy_path = planner.greedy_path(r, world_map)
-        r.final_path = greedy_path
-
+    # for r in robots:
+    #     planner = GreedyPlanner(budget)
+    #     greedy_path = planner.greedy_path(r, world_map)
+    #     r.final_path = greedy_path
+    
     #Use the Simulator to evaluate the final paths
     simulator = Simulator(world_map, robots)
-    simulator.run()
+    # simulator.run()
 
     #See the results
     simulator.visualize()
@@ -85,19 +85,20 @@ if __name__ == "__main__":
     exploration_exploitation_parameter = 1.0 # =1.0 is recommended. <1.0 more exploitation. >1.0 more exploration.
 
     #Map Parameters
-    bounds = (0, 10)
+    bounds = (0, 25)
     num_survivors = 50
-    num_hotspots = 5
-    num_damages = 3
+    num_hotspots = 10
+    num_damages = 30
 
     world_map = Map(bounds, num_survivors, num_hotspots, num_damages)
     robot = Robot(0, 0, bounds, world_map)
     robot2 = Robot(10, 10, bounds, world_map)
-    robots = [robot, robot2]
+    # robots = [robot, robot2]
+    robots = list()
 
-    length_of_path = run_dec_mcts(budget, num_samples, computational_budget, exploration_exploitation_parameter, robots, world_map, 'heuristic')
-    length_of_path = run_dec_mcts(budget, num_samples, computational_budget, exploration_exploitation_parameter, robots, world_map, 'uniform')
-    run_random_planner(length_of_path, robots, world_map)
-    run_greedy_planner(length_of_path, robots, world_map)
+    # length_of_path = run_dec_mcts(budget, num_samples, computational_budget, exploration_exploitation_parameter, robots, world_map, 'heuristic')
+    # length_of_path = run_dec_mcts(budget, num_samples, computational_budget, exploration_exploitation_parameter, robots, world_map, 'uniform')
+    # run_random_planner(length_of_path, robots, world_map)
+    run_greedy_planner(10, robots, world_map)
     
     print("Done :)")

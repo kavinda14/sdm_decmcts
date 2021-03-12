@@ -16,7 +16,6 @@ class Simulator:
 
         #Container to identify, which survivors have been seen by the robots
         self.visited_survivors = set()
-        self._update_map()
         self.score = 0
         self.iterations = 0
         self.found_goal = False

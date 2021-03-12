@@ -193,6 +193,7 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                     # Recurse up the tree
                     parent = parent.parent
 
+        ################################
         # Extract 10 Best Sequences from Current Robot
         # print('Extracting Top 10 Solutions')
         list_of_top_10_nodes_sequences = []
@@ -201,8 +202,7 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
         i = 0
         while i != 10:
             current = robot.root
-            while current.children and all_children_nodes_are_not_in_the_list(current,
-                                                                              list_of_top_10_nodes_ids):  # is not empty
+            while current.children and all_children_nodes_are_not_in_the_list(current, list_of_top_10_nodes_ids):  # is not empty
                 # Find the child with best score
                 best_score = 0
                 best_child = -1
