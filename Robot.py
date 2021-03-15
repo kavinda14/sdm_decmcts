@@ -39,6 +39,7 @@ class Robot:
         #Check invalid_locations from map
         for loc in self.map.invalid_locations:
             if x == loc[0] and y == loc[1]:
+                print("Invalid Location {}".format(loc))
                 return False
 
         return in_bounds

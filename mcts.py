@@ -187,13 +187,10 @@ def dec_mcts(budget, num_samples, computational_budget, explore_exploit, robots,
                 # Rollout & Reward
                 rollout_sequence = list()
                 if rollout_policy == 'uniform':
-                    rollout_sequence = uniform_rollout(
-                        current.sequence, robot, budget)
+                    rollout_sequence = uniform_rollout(current.sequence, robot, budget)
                 else:
-                    rollout_sequence = heuristic_rollout(
-                        current.sequence, robot, budget)
-                rollout_reward = reward(
-                    rollout_sequence, other_robots_paths, robot.sensing_range, world_map)
+                    rollout_sequence = heuristic_rollout(current.sequence, robot, budget, world_map)
+                rollout_reward = reward(rollout_sequence, other_robots_paths, robot.sensing_range, world_map)
 
                 ################################
                 # Back-propagation

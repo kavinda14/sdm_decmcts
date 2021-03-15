@@ -21,8 +21,8 @@ class Map:
         #Simulate damage to environment
         for i in range(self.num_damages):
             tetris_id = np.random.randint(0, 2)
-            x = int(np.random.uniform(self.bounds[0]+diff, self.bounds[1], size=1))
-            y = int(np.random.uniform(self.bounds[0]+diff, self.bounds[1], size=1))
+            x = int(np.random.uniform(4, self.bounds[1], size=1))
+            y = int(np.random.uniform(4, self.bounds[1], size=1))
 
             if tetris_id == 0: #Square
                 self.invalid_locations.append((x, y))

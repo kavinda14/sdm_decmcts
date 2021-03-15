@@ -67,6 +67,7 @@ class Simulator:
         r_locs = list()
         for r in self.robots:
             if not r.check_valid_loc():
+                print(r.get_loc())
                 raise ValueError(f"Robot has left the map. It is at position: {r.get_loc()}, outside of the map boundary")
             r_locs.append(r.get_loc())
         
@@ -78,7 +79,6 @@ class Simulator:
         plt.xlim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
         plt.ylim(self.map.bounds[0]-.5, self.map.bounds[1]+(self.map.bounds[1]*.05))
         ax = plt.gca()
-        print(len(self.visited_survivors))
 
         survivor_x = [i[0] for i in self.map.survivor_locs]
         survivor_y = [i[1] for i in self.map.survivor_locs]
